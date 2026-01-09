@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,126 +9,295 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        html { scroll-behavior: smooth; }
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
 
         .bg-fixed-burger {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)), 
-                        url('https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=2071&auto=format&fit=crop'); 
-            background-size: cover; background-position: center;
-            filter: blur(5px); z-index: -2; transform: scale(1.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95)),
+                url('https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=2071&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px);
+            z-index: -2;
+            transform: scale(1.1);
         }
 
-        .overlay-brasa {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at bottom, rgba(234, 88, 12, 0.25) 0%, transparent 75%);
-            z-index: -1; pointer-events: none; animation: pulse-brasa 4s infinite alternate;
-        }
-        @keyframes pulse-brasa { 0% { opacity: 0.4; } 100% { opacity: 1; } }
-
-        .faisca {
-            position: fixed; background: #ff7300; width: 2px; height: 2px;
-            border-radius: 50%; pointer-events: none; z-index: 50;
-            animation: subir 5s linear infinite; opacity: 0.8; box-shadow: 0 0 5px #ff7300;
-        }
-        @keyframes subir {
-            0% { transform: translateY(110vh) translateX(0); opacity: 1; }
-            100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+        /* Nav links ativos */
+        .nav-link {
+            transition: 0.3s;
+            position: relative;
         }
 
-        header { background: rgba(0, 0, 0, 0.95); border-bottom: 2px solid #ea580c; box-shadow: 0 0 25px rgba(234, 88, 12, 0.6); }
-        .item-card { background: rgba(24, 24, 27, 0.9); border: 1px solid #333; border-radius: 1.25rem; overflow: hidden; transition: 0.3s; cursor: pointer; }
-        
-        /* Melhoria: Feedback Visual de Clique */
-        .item-card:active { transform: scale(0.95); border-color: #ea580c; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Status de Fechado */
-        .closed-overlay { filter: grayscale(1); opacity: 0.6; pointer-events: none; }
+        .nav-link:active {
+            color: #ea580c;
+        }
+
+        /* Skeleton Load Effect */
+        .img-placeholder {
+            background: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.25rem 1.25rem 0 0;
+        }
+
+        .img-placeholder::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 2px solid #ea580c;
+        }
+
+        .item-card {
+            background: rgba(24, 24, 27, 0.9);
+            border: 1px solid #333;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .item-card:active {
+            transform: scale(0.95);
+            border-color: #ea580c;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .closed-overlay {
+            filter: grayscale(1);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Estilo do Modal de Boas-Vindas */
+        #welcome-modal {
+            transition: opacity 0.5s ease;
+        }
+
+        #welcome-content {
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
     </style>
 </head>
+
 <body>
 
+    <div id="welcome-modal"
+        class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm hidden">
+        <div id="welcome-content"
+            class="bg-zinc-900 border-2 border-orange-600 w-full max-w-sm rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(234,88,12,0.3)] scale-90 opacity-0">
+            <div class="text-5xl mb-4">🔥</div>
+            <h2 class="text-2xl font-black italic text-orange-500 uppercase mb-2">Bem-vindo à<br>Mão na Brasa</h2>
+            <p class="text-zinc-400 text-sm mb-6">Hambúrgueres artesanais feitos no fogo de verdade. Prepare o seu
+                apetite!</p>
+
+            <div class="bg-orange-600/10 border border-orange-600/20 rounded-xl p-3 mb-6">
+                <p class="text-orange-500 text-xs font-bold uppercase tracking-widest">Sugestão:</p>
+                <p class="text-white text-sm italic">"Experimente o Na Brasa Prime, o nosso campeão de vendas!"</p>
+            </div>
+
+            <button onclick="closeWelcome()"
+                class="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-4 rounded-2xl uppercase tracking-widest transition-all">
+                Ver Cardápio
+            </button>
+        </div>
+    </div>
+
     <div class="bg-fixed-burger"></div>
-    <div class="overlay-brasa"></div>
 
     <header class="sticky top-0 z-[60] p-4 flex flex-col items-center backdrop-blur-md">
-        <img src="maonabrasa.png" alt="Mão na Brasa" class="h-20 mb-2 drop-shadow-[0_0_10px_rgba(234,88,12,0.9)]" onerror="this.src='https://via.placeholder.com/200x80/000000/ea580c?text=MÃO+NA+BRASA'">
-        
-        <div id="status-loja" class="text-[10px] font-bold uppercase px-3 py-1 rounded-full mb-2"></div>
+        <h1
+            class="text-3xl font-black italic tracking-tighter text-orange-600 drop-shadow-[0_0_10px_rgba(234,88,12,0.4)]">
+            MÃO NA BRASA
+        </h1>
 
-        <nav class="flex gap-4 text-[20px] font-black uppercase tracking-widest text-zinc-400 overflow-x-auto no-scrollbar w-full justify-center">
-            <a href="#combos">Combos</a>
-            <a href="#burguers">Burguers</a>
-            <a href="#porcoes">Porções</a>
-            <a href="#bebidas">Bebidas</a>
+        <div id="status-loja"
+            class="text-[11px] font-bold uppercase px-4 py-1.5 rounded-full my-2 bg-zinc-900 border border-zinc-700 text-zinc-300">
+            Calculando tempo...
+        </div>
+
+        <nav
+            class="flex gap-6 text-[13px] font-black uppercase tracking-widest text-zinc-500 overflow-x-auto no-scrollbar w-full justify-center">
+            <a href="#combos" class="nav-link">Combos</a>
+            <a href="#burguers" class="nav-link">Burguers</a>
+            <a href="#porcoes" class="nav-link">Porções</a>
+            <a href="#bebidas" class="nav-link">Bebidas</a>
         </nav>
     </header>
 
     <main class="max-w-4xl mx-auto p-4 pb-40 relative">
-        <h2 id="combos" class="text-orange-500 font-black italic uppercase text-xl mb-6 mt-4">🔥 Combos e Barcas</h2>
+        <h2 id="combos"
+            class="text-orange-500 font-black italic uppercase text-xl mb-6 mt-4 border-l-4 border-orange-600 pl-3">🔥
+            Combos e Barcas</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12" id="combo-items"></div>
 
-        <h2 id="burguers" class="text-orange-500 font-black italic uppercase text-xl mb-6">🍔 Hambúrgueres</h2>
+        <h2 id="burguers"
+            class="text-orange-500 font-black italic uppercase text-xl mb-6 border-l-4 border-orange-600 pl-3">🍔
+            Hambúrgueres</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12" id="burger-items"></div>
 
-        <h2 id="porcoes" class="text-orange-500 font-black italic uppercase text-xl mb-6">🍟 Porções</h2>
+        <h2 id="porcoes"
+            class="text-orange-500 font-black italic uppercase text-xl mb-6 border-l-4 border-orange-600 pl-3">🍟
+            Porções</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12" id="portion-items"></div>
 
-        <h2 id="bebidas" class="text-orange-500 font-black italic uppercase text-xl mb-6">🥤 Bebidas</h2>
+        <h2 id="bebidas"
+            class="text-orange-500 font-black italic uppercase text-xl mb-6 border-l-4 border-orange-600 pl-3">🥤
+            Bebidas</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="beverage-items"></div>
     </main>
 
-    <div id="cart-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-orange-600 p-4 rounded-2xl flex justify-between items-center hidden shadow-2xl z-[70] cursor-pointer" onclick="toggleCart()">
+    <div id="cart-bar"
+        class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-orange-600 p-4 rounded-2xl flex justify-between items-center hidden shadow-2xl z-[70] cursor-pointer"
+        onclick="toggleCart()">
         <span class="font-black uppercase text-sm text-white">🛒 Ver Pedido (<span id="cart-count">0</span>)</span>
         <span id="total-display" class="font-black text-lg text-white">R$ 0,00</span>
     </div>
 
-    <div id="cart-modal" class="fixed inset-0 bg-black/98 backdrop-blur-xl z-[100] hidden flex flex-col p-4 overflow-y-auto">
+    <div id="cart-modal"
+        class="fixed inset-0 bg-black/98 backdrop-blur-xl z-[100] hidden flex flex-col p-4 overflow-y-auto">
         <div class="w-full max-w-lg mx-auto pb-10 text-white">
             <div class="flex justify-between items-center mb-6 border-b border-zinc-800 pb-4">
-                <h2 class="text-2xl font-black uppercase italic">Finalizar Pedido</h2>
+                <h2 class="text-2xl font-black uppercase italic text-orange-500">Seu Pedido</h2>
                 <button onclick="toggleCart()" class="text-zinc-500 text-4xl">&times;</button>
             </div>
-            
+
             <div id="cart-list" class="space-y-3 mb-6"></div>
-            
+
             <div class="space-y-4 text-black font-bold">
-                <input type="text" id="customer-name" placeholder="Seu Nome" class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
-                <select id="delivery-method" onchange="updateCart()" class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
+                <input type="text" id="customer-name" placeholder="Seu Nome"
+                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
+                <input type="tel" id="customer-phone" placeholder="WhatsApp (00) 00000-0000"
+                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none" oninput="maskPhone(this)">
+
+                <select id="delivery-method" onchange="updateCart()"
+                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
                     <option value="retirada">Vou retirar na Hamburgueria</option>
                     <option value="entrega">Entregar em casa (+ R$ 10,00)</option>
                 </select>
-                <input type="text" id="customer-address" placeholder="Endereço Completo" class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
-                <textarea id="order-notes" placeholder="Observações (Sem cebola, ponto da carne...)" class="w-full p-4 rounded-xl bg-zinc-100 outline-none h-20 resize-none"></textarea>
-                <select id="payment-method" onchange="toggleTroco()" class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
+                <input type="text" id="customer-address" placeholder="Endereço Completo (Rua, Nº, Bairro)"
+                    class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
+                <textarea id="order-notes" placeholder="Observações (Sem cebola, ponto da carne...)"
+                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none h-20 resize-none"></textarea>
+
+                <select id="payment-method" onchange="toggleTroco()"
+                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
                     <option value="Pix">Pix</option>
                     <option value="Cartão">Cartão</option>
                     <option value="Dinheiro">Dinheiro</option>
                 </select>
-                <input type="text" id="troco-input" placeholder="Troco para quanto?" class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
+                <input type="text" id="troco-input" placeholder="Troco para quanto?"
+                    class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
             </div>
 
             <div class="bg-zinc-900 p-6 rounded-2xl my-6 border border-zinc-800 flex justify-between items-center">
-                <span class="text-zinc-400 font-black uppercase text-xs">Total</span>
+                <span class="text-zinc-400 font-black uppercase text-xs">Total Final</span>
                 <span id="modal-total" class="text-3xl font-black text-orange-500">R$ 0,00</span>
             </div>
 
-            <button id="btn-send" onclick="sendWhatsApp()" class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xl flex items-center justify-center gap-3 hover:bg-green-700 text-white shadow-lg">
+            <button id="btn-send" onclick="sendWhatsApp()"
+                class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xl flex items-center justify-center gap-3 hover:bg-green-700 text-white shadow-lg">
                 <i class="fab fa-whatsapp text-2xl"></i> Enviar para o WhatsApp
             </button>
         </div>
     </div>
 
     <script>
-        // CONFIGURAÇÃO DE HORÁRIO (Ex: 18:00 às 23:30)
         const OPEN_HOUR = 18;
         const CLOSE_HOUR = 23;
         const CLOSE_MINUTES = 30;
+        let cart = {};
 
-        let cart = {}; // Melhoria: Agora é um objeto para agrupar quantidades
+        // 1. Mensagem de Boas-Vindas
+        window.onload = function () {
+            if (!sessionStorage.getItem('welcomeShown')) {
+                const modal = document.getElementById('welcome-modal');
+                const content = document.getElementById('welcome-content');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-90', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 100);
+                sessionStorage.setItem('welcomeShown', 'true');
+            }
+            updateStatus();
+            renderGrid(combos, 'combo-items');
+            renderGrid(burgers, 'burger-items');
+            renderGrid(porcoes, 'portion-items');
+            renderGrid(beverages, 'beverage-items');
+        };
+
+        function closeWelcome() {
+            const modal = document.getElementById('welcome-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => modal.classList.add('hidden'), 500);
+        }
+
+        // 2. Status com Contagem Regressiva
+        function updateStatus() {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            const openTime = OPEN_HOUR * 60;
+            const closeTime = CLOSE_HOUR * 60 + CLOSE_MINUTES;
+            const statusDiv = document.getElementById('status-loja');
+            const btnSend = document.getElementById('btn-send');
+
+            if (currentTime >= openTime && currentTime < closeTime) {
+                const diff = closeTime - currentTime;
+                const h = Math.floor(diff / 60);
+                const m = diff % 60;
+                statusDiv.innerHTML = `<span class="text-green-500">● ABERTO</span> • FECHA EM ${h}h ${m}min`;
+            } else {
+                let nextOpen = openTime - currentTime;
+                if (nextOpen < 0) nextOpen += 1440;
+                const h = Math.floor(nextOpen / 60);
+                const m = nextOpen % 60;
+                statusDiv.innerHTML = `<span class="text-red-500">● FECHADO</span> • ABRE EM ${h}h ${m}min`;
+                document.querySelector('main').classList.add('closed-overlay');
+                btnSend.disabled = true;
+                btnSend.classList.replace('bg-green-600', 'bg-zinc-700');
+            }
+        }
+        setInterval(updateStatus, 60000);
+
+        // 3. Máscara de Telefone
+        function maskPhone(i) {
+            let v = i.value.replace(/\D/g, "");
+            v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+            v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+            i.value = v;
+        }
 
         const combos = [
             { name: "Combo Individual", price: 39.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg" },
@@ -169,168 +339,76 @@
             { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg" }
         ];
 
-        function checkStoreStatus() {
-            const now = new Date();
-            const hour = now.getHours();
-            const min = now.getMinutes();
-            const statusDiv = document.getElementById('status-loja');
-            const btnSend = document.getElementById('btn-send');
-            
-            const isOpen = (hour > OPEN_HOUR || (hour === OPEN_HOUR && min >= 0)) && 
-                           (hour < CLOSE_HOUR || (hour === CLOSE_HOUR && min <= CLOSE_MINUTES));
-
-            if (isOpen) {
-                statusDiv.innerText = "● Aberto Agora";
-                statusDiv.className = "text-[10px] font-bold uppercase px-3 py-1 rounded-full mb-2 bg-green-500/20 text-green-500 border border-green-500/50";
-            } else {
-                statusDiv.innerText = "● Fechado (Abre às " + OPEN_HOUR + ":00)";
-                statusDiv.className = "text-[10px] font-bold uppercase px-3 py-1 rounded-full mb-2 bg-red-500/20 text-red-500 border border-red-500/50";
-                document.querySelector('main').classList.add('closed-overlay');
-                btnSend.disabled = true;
-                btnSend.classList.replace('bg-green-600', 'bg-zinc-700');
-                btnSend.innerText = "Loja Fechada";
-            }
-        }
-
         function renderGrid(items, containerId) {
             const container = document.getElementById(containerId);
             items.forEach(item => {
                 container.innerHTML += `
                     <div class="item-card flex flex-col" onclick="addToCart('${item.name}', ${item.price}, '${item.img}')">
-                        <img src="${item.img}" loading="lazy" class="w-full aspect-square object-cover" onerror="this.src='https://via.placeholder.com/300/222/ea580c?text=FOTO'">
+                        <div class="img-placeholder aspect-square">
+                            <img src="${item.img}" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300/222/ea580c?text=LANCHE'">
+                        </div>
                         <div class="p-3 flex flex-col flex-grow">
-                            <h3 class="font-black text-[11px] uppercase italic leading-tight">${item.name}</h3>
-                            <p class="text-[9px] text-zinc-400 mt-2 flex-grow">${item.desc}</p>
+                            <h3 class="font-black text-[11px] uppercase italic text-zinc-100 leading-tight">${item.name}</h3>
+                            <p class="text-[9px] text-zinc-500 mt-2 flex-grow">${item.desc}</p>
                             <div class="mt-3 flex justify-between items-center">
                                 <span class="text-orange-500 font-black text-sm">R$ ${item.price.toFixed(2)}</span>
-                                <i class="fas fa-plus-circle text-orange-500/50"></i>
+                                <i class="fas fa-plus-circle text-orange-600"></i>
                             </div>
                         </div>
                     </div>`;
             });
         }
 
-        function renderBebidas() {
-            const container = document.getElementById('beverage-items');
-            beverages.forEach(item => {
-                container.innerHTML += `
-                    <div class="bg-zinc-900/90 p-3 rounded-xl flex items-center gap-3 border border-zinc-800" onclick="addToCart('${item.name}', ${item.price}, '${item.img}')">
-                        <img src="${item.img}" loading="lazy" class="w-12 h-12 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100/222/ea580c?text=BEBIDA'">
-                        <div class="flex-grow">
-                            <h4 class="font-black text-[10px] uppercase italic">${item.name}</h4>
-                            <span class="text-orange-500 font-bold text-xs">R$ ${item.price.toFixed(2)}</span>
-                        </div>
-                        <i class="fas fa-plus text-orange-500 mr-2 text-xs"></i>
-                    </div>`;
-            });
-        }
-
-        function addToCart(name, price, img) { 
-            if(cart[name]) {
-                cart[name].qty += 1;
-            } else {
-                cart[name] = { price, img, qty: 1 };
-            }
-            document.getElementById('cart-bar').classList.remove('hidden'); 
+        function addToCart(name, price, img) {
+            cart[name] ? cart[name].qty++ : cart[name] = { price, img, qty: 1 };
+            document.getElementById('cart-bar').classList.remove('hidden');
             updateCart();
         }
 
         function updateCart() {
-            const m = document.getElementById('delivery-method').value;
-            document.getElementById('customer-address').classList.toggle('hidden', m === 'retirada');
-            
-            let subtotal = 0;
-            let count = 0;
-            let cartHtml = '';
-
-            for (let name in cart) {
-                const item = cart[name];
-                subtotal += item.price * item.qty;
-                count += item.qty;
-                cartHtml += `
-                <div class="flex items-center gap-4 bg-zinc-900/80 p-3 rounded-xl border border-zinc-800">
-                    <img src="${item.img}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/50'">
-                    <div class="flex-grow">
-                        <div class="text-[10px] font-black uppercase text-white">${name}</div>
-                        <div class="text-orange-500 text-[10px]">R$ ${item.price.toFixed(2)}</div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="changeQty('${name}', -1)" class="w-6 h-6 bg-zinc-800 rounded-full text-xs">-</button>
-                        <span class="text-xs font-bold">${item.qty}</span>
-                        <button onclick="changeQty('${name}', 1)" class="w-6 h-6 bg-orange-600 rounded-full text-xs">+</button>
+            const method = document.getElementById('delivery-method').value;
+            document.getElementById('customer-address').classList.toggle('hidden', method === 'retirada');
+            let subtotal = 0, count = 0, html = '';
+            for (let n in cart) {
+                subtotal += cart[n].price * cart[n].qty;
+                count += cart[n].qty;
+                html += `<div class="flex items-center gap-3 bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+                    <img src="${cart[n].img}" class="w-10 h-10 object-cover rounded-lg">
+                    <div class="flex-grow"><div class="text-[10px] font-bold uppercase">${n}</div><div class="text-orange-500 text-[10px]">R$ ${cart[n].price.toFixed(2)}</div></div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeQty('${n}',-1)" class="w-6 h-6 bg-zinc-800 rounded-full text-xs">-</button>
+                        <span class="text-xs font-bold">${cart[n].qty}</span>
+                        <button onclick="changeQty('${n}',1)" class="w-6 h-6 bg-orange-600 rounded-full text-xs">+</button>
                     </div>
                 </div>`;
             }
-
-            const total = subtotal + (m === 'entrega' ? 10 : 0);
+            const total = subtotal + (method === 'entrega' ? 10 : 0);
             document.getElementById('cart-count').innerText = count;
             document.getElementById('total-display').innerText = `R$ ${total.toFixed(2)}`;
             document.getElementById('modal-total').innerText = `R$ ${total.toFixed(2)}`;
-            document.getElementById('cart-list').innerHTML = cartHtml || '<p class="text-center text-zinc-500">Seu carrinho está vazio</p>';
-            
-            if(count === 0) document.getElementById('cart-bar').classList.add('hidden');
+            document.getElementById('cart-list').innerHTML = html || '<p class="text-center text-zinc-500 py-4">Carrinho vazio</p>';
+            if (count === 0) document.getElementById('cart-bar').classList.add('hidden');
         }
 
-        function changeQty(name, delta) {
-            cart[name].qty += delta;
-            if(cart[name].qty <= 0) delete cart[name];
-            updateCart();
-        }
-
-        function toggleCart() { 
-            document.getElementById('cart-modal').classList.toggle('hidden');
-            document.body.classList.toggle('overflow-hidden');
-        }
-
-        function toggleTroco() {
-            const pay = document.getElementById('payment-method').value;
-            document.getElementById('troco-input').classList.toggle('hidden', pay !== 'Dinheiro');
-        }
+        function changeQty(n, d) { cart[n].qty += d; if (cart[n].qty <= 0) delete cart[n]; updateCart(); }
+        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); document.body.classList.toggle('overflow-hidden'); }
+        function toggleTroco() { document.getElementById('troco-input').classList.toggle('hidden', document.getElementById('payment-method').value !== 'Dinheiro'); }
 
         function sendWhatsApp() {
             const nome = document.getElementById('customer-name').value;
-            const metodo = document.getElementById('delivery-method').value;
-            const endereco = document.getElementById('customer-address').value;
-            const notas = document.getElementById('order-notes').value;
-            const pagamento = document.getElementById('payment-method').value;
-            const troco = document.getElementById('troco-input').value;
+            const fone = document.getElementById('customer-phone').value;
+            if (!nome || fone.length < 10) return alert("Por favor, preencha Nome e WhatsApp corretamente!");
 
-            if(!nome) return alert("Preencha seu nome!");
-            if(metodo === 'entrega' && !endereco) return alert("Preencha o endereço!");
-            if(Object.keys(cart).length === 0) return alert("Carrinho vazio!");
+            let msg = `🔥 *MÃO NA BRASA - PEDIDO*\n\n👤 *Cliente:* ${nome}\n📞 *Fone:* ${fone}\n`;
+            msg += `📍 *Entrega:* ${document.getElementById('delivery-method').value === 'entrega' ? 'Sim' : 'Não'}\n`;
+            if (document.getElementById('delivery-method').value === 'entrega') msg += `🏠 *End:* ${document.getElementById('customer-address').value}\n`;
+            msg += `\n🛒 *ITENS:*\n`;
+            for (let n in cart) msg += `• ${cart[n].qty}x ${n}\n`;
+            msg += `\n💰 *TOTAL:* ${document.getElementById('modal-total').innerText}`;
 
-            let texto = `🔥 *MÃO NA BRASA - NOVO PEDIDO*\n\n`;
-            texto += `👤 *Cliente:* ${nome}\n`;
-            texto += `📍 *Tipo:* ${metodo === 'entrega' ? 'Entrega 🛵' : 'Retirada 🥡'}\n`;
-            if(metodo === 'entrega') texto += `🏠 *Endereço:* ${endereco}\n`;
-            if(notas) texto += `📝 *Obs:* ${notas}\n`;
-            texto += `💳 *Pagamento:* ${pagamento}${troco ? ' (Troco p/ ' + troco + ')' : ''}\n\n`;
-            texto += `🛒 *ITENS DO PEDIDO:*\n`;
-            
-            for (let name in cart) {
-                texto += `• ${cart[name].qty}x ${name} (R$ ${(cart[name].price * cart[name].qty).toFixed(2)})\n`;
-            }
-            
-            texto += `\n💰 *TOTAL:* *${document.getElementById('modal-total').innerText}*`;
-
-            const url = `https://api.whatsapp.com/send?phone=5564992360895&text=${encodeURIComponent(texto)}`;
-            window.location.href = url;
+            window.location.href = `https://api.whatsapp.com/send?phone=5564992360895&text=${encodeURIComponent(msg)}`;
         }
-
-        // Faiscas Animadas
-        for (let i = 0; i < 20; i++) {
-            let f = document.createElement('div');
-            f.className = 'faisca';
-            f.style.left = Math.random() * 100 + 'vw';
-            f.style.animationDelay = Math.random() * 5 + 's';
-            document.body.appendChild(f);
-        }
-
-        checkStoreStatus();
-        renderGrid(combos, 'combo-items');
-        renderGrid(burgers, 'burger-items');
-        renderGrid(porcoes, 'portion-items');
-        renderBebidas();
     </script>
 </body>
+
 </html>
