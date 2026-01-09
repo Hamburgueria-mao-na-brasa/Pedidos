@@ -36,58 +36,34 @@
             transform: scale(1.1);
         }
 
-        /* Nav links ativos */
-        .nav-link {
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .nav-link:active {
-            color: #ea580c;
-        }
-
-        /* Skeleton Load Effect */
-        .img-placeholder {
-            background: #1a1a1a;
-            position: relative;
-            overflow: hidden;
-            border-radius: 1.25rem 1.25rem 0 0;
-        }
-
-        .img-placeholder::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            100% {
-                left: 100%;
-            }
-        }
-
         header {
             background: rgba(0, 0, 0, 0.95);
             border-bottom: 2px solid #ea580c;
         }
 
+        /* Padronização dos Itens */
         .item-card {
             background: rgba(24, 24, 27, 0.9);
             border: 1px solid #333;
             border-radius: 1.25rem;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
             transition: 0.3s;
-            cursor: pointer;
         }
 
-        .item-card:active {
-            transform: scale(0.95);
-            border-color: #ea580c;
+        .img-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -100,13 +76,15 @@
             pointer-events: none;
         }
 
-        /* Estilo do Modal de Boas-Vindas */
-        #welcome-modal {
-            transition: opacity 0.5s ease;
-        }
-
-        #welcome-content {
-            transition: transform 0.5s ease, opacity 0.5s ease;
+        .cart-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: #f4f4f5;
+            color: #000;
+            font-weight: 700;
+            outline: none;
+            border: 2px solid transparent;
         }
     </style>
 </head>
@@ -114,197 +92,116 @@
 <body>
 
     <div id="welcome-modal"
-        class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm hidden">
+        class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md hidden">
         <div id="welcome-content"
-            class="bg-zinc-900 border-2 border-orange-600 w-full max-w-sm rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(234,88,12,0.3)] scale-90 opacity-0">
+            class="bg-zinc-900 border-2 border-orange-600 w-full max-w-sm rounded-3xl p-6 text-center shadow-[0_0_50px_rgba(234,88,12,0.3)] transition-all duration-500 scale-90 opacity-0">
             <div class="text-5xl mb-4">🔥</div>
-            <h2 class="text-2xl font-black italic text-orange-500 uppercase mb-2">Bem-vindo à<br>Mão na Brasa</h2>
-            <p class="text-zinc-400 text-sm mb-6">Hambúrgueres artesanais feitos no fogo de verdade. Prepare o seu
-                apetite!</p>
-
-            <div class="bg-orange-600/10 border border-orange-600/20 rounded-xl p-3 mb-6">
-                <p class="text-orange-500 text-xs font-bold uppercase tracking-widest">Sugestão:</p>
-                <p class="text-white text-sm italic">"Experimente o Na Brasa Prime, o nosso campeão de vendas!"</p>
+            <h2 class="text-2xl font-black italic text-orange-500 uppercase mb-2">Mão na Brasa</h2>
+            <div class="bg-black/50 rounded-2xl p-4 mb-6 text-left border border-zinc-800">
+                <h3 class="text-orange-600 font-bold text-xs uppercase mb-3 flex items-center gap-2">⭐ Sugestões do Chef
+                </h3>
+                <ul class="text-zinc-300 text-[13px] space-y-3">
+                    <li><b class="text-orange-500">INDIVIDUAL:</b> Na Brasa Prime ou Piscina de Cheddar.</li>
+                    <li><b class="text-orange-500">DUAS PESSOAS:</b> Brasa Duplo (Barca).</li>
+                </ul>
             </div>
-
             <button onclick="closeWelcome()"
-                class="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-4 rounded-2xl uppercase tracking-widest transition-all">
-                Ver Cardápio
-            </button>
+                class="w-full bg-orange-600 text-white font-black py-4 rounded-2xl uppercase">ENTRAR</button>
         </div>
     </div>
 
     <div class="bg-fixed-burger"></div>
 
-    <header class="sticky top-0 z-[60] p-4 flex flex-col items-center backdrop-blur-md">
-        <h1
-            class="text-3xl font-black italic tracking-tighter text-orange-600 drop-shadow-[0_0_10px_rgba(234,88,12,0.4)]">
-            MÃO NA BRASA
-        </h1>
+    <header class="sticky top-0 z-[60] p-4 flex flex-col items-center backdrop-blur-md text-center">
+        <h1 class="text-3xl font-black italic text-orange-600">MÃO NA BRASA</h1>
 
-        <div id="status-loja"
-            class="text-[11px] font-bold uppercase px-4 py-1.5 rounded-full my-2 bg-zinc-900 border border-zinc-700 text-zinc-300">
-            Calculando tempo...
+        <div id="status-loja" class="flex flex-col items-center gap-1 my-2">
+            <div id="status-badge"
+                class="text-[10px] font-bold uppercase px-4 py-1.5 rounded-full bg-zinc-900 border border-zinc-700">
+                Verificando...</div>
+            <div id="countdown-timer" class="text-orange-500 font-black text-xs uppercase hidden">
+                Abre em: <span id="timer">00:00:00</span>
+            </div>
         </div>
 
         <nav
-            class="flex gap-6 text-[13px] font-black uppercase tracking-widest text-zinc-500 overflow-x-auto no-scrollbar w-full justify-center">
-            <a href="#combos" class="nav-link">Combos</a>
-            <a href="#burguers" class="nav-link">Burguers</a>
-            <a href="#porcoes" class="nav-link">Porções</a>
-            <a href="#bebidas" class="nav-link">Bebidas</a>
+            class="flex gap-6 text-[12px] font-black uppercase text-zinc-500 overflow-x-auto no-scrollbar w-full justify-center">
+            <a href="#combos">Combos</a>
+            <a href="#burguers">Burguers</a>
+            <a href="#porcoes">Porções</a>
+            <a href="#bebidas">Bebidas</a>
         </nav>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4 pb-40 relative">
-        <h2 id="combos"
-            class="text-orange-500 font-black italic uppercase text-xl mb-6 mt-4 border-l-4 border-orange-600 pl-3">🔥
-            Combos e Barcas</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12" id="combo-items"></div>
+    <main class="max-w-6xl mx-auto p-4 pb-40">
+        <h2 id="combos" class="text-orange-500 font-black uppercase text-lg mb-4 border-l-4 border-orange-600 pl-2">🔥
+            Combos</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10" id="combo-items"></div>
 
-        <h2 id="burguers"
-            class="text-orange-500 font-black italic uppercase text-xl mb-6 border-l-4 border-orange-600 pl-3">🍔
-            Hambúrgueres</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12" id="burger-items"></div>
+        <h2 id="burguers" class="text-orange-500 font-black uppercase text-lg mb-4 border-l-4 border-orange-600 pl-2">🍔
+            Burguers</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10" id="burger-items"></div>
 
-        <h2 id="porcoes"
-            class="text-orange-500 font-black italic uppercase text-xl mb-6 border-l-4 border-orange-600 pl-3">🍟
+        <h2 id="porcoes" class="text-orange-500 font-black uppercase text-lg mb-4 border-l-4 border-orange-600 pl-2">🍟
             Porções</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12" id="portion-items"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10" id="portion-items"></div>
 
-        <h2 id="bebidas"
-            class="text-orange-500 font-black italic uppercase text-xl mb-6 border-l-4 border-orange-600 pl-3">🥤
+        <h2 id="bebidas" class="text-orange-500 font-black uppercase text-lg mb-4 border-l-4 border-orange-600 pl-2">🥤
             Bebidas</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="beverage-items"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="beverage-items"></div>
     </main>
 
     <div id="cart-bar"
-        class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-orange-600 p-4 rounded-2xl flex justify-between items-center hidden shadow-2xl z-[70] cursor-pointer"
+        class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-orange-600 p-4 rounded-2xl flex justify-between items-center hidden z-[70]"
         onclick="toggleCart()">
-        <span class="font-black uppercase text-sm text-white">🛒 Ver Pedido (<span id="cart-count">0</span>)</span>
-        <span id="total-display" class="font-black text-lg text-white">R$ 0,00</span>
+        <span class="font-black text-white uppercase text-sm">🛒 Pedido (<span id="cart-count">0</span>)</span>
+        <span id="total-display" class="font-black text-white text-lg">R$ 0,00</span>
     </div>
 
-    <div id="cart-modal"
-        class="fixed inset-0 bg-black/98 backdrop-blur-xl z-[100] hidden flex flex-col p-4 overflow-y-auto">
-        <div class="w-full max-w-lg mx-auto pb-10 text-white">
-            <div class="flex justify-between items-center mb-6 border-b border-zinc-800 pb-4">
-                <h2 class="text-2xl font-black uppercase italic text-orange-500">Seu Pedido</h2>
-                <button onclick="toggleCart()" class="text-zinc-500 text-4xl">&times;</button>
+    <div id="cart-modal" class="fixed inset-0 bg-black/98 z-[100] hidden overflow-y-auto p-4">
+        <div class="max-w-lg mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-black text-orange-500">MEU PEDIDO</h2>
+                <button onclick="toggleCart()" class="text-3xl">&times;</button>
             </div>
-
             <div id="cart-list" class="space-y-3 mb-6"></div>
 
-            <div class="space-y-4 text-black font-bold">
-                <input type="text" id="customer-name" placeholder="Seu Nome"
-                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
-                <input type="tel" id="customer-phone" placeholder="WhatsApp (00) 00000-0000"
-                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none" oninput="maskPhone(this)">
-
-                <select id="delivery-method" onchange="updateCart()"
-                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
-                    <option value="retirada">Vou retirar na Hamburgueria</option>
-                    <option value="entrega">Entregar em casa (+ R$ 10,00)</option>
+            <div class="space-y-3">
+                <input type="text" id="customer-name" placeholder="Nome" class="cart-input">
+                <input type="tel" id="customer-phone" placeholder="WhatsApp" class="cart-input"
+                    oninput="maskPhone(this)">
+                <select id="delivery-method" onchange="handleDeliveryChange()" class="cart-input">
+                    <option value="retirada">Retirar</option>
+                    <option value="entrega">Entrega (+R$10)</option>
                 </select>
-                <input type="text" id="customer-address" placeholder="Endereço Completo (Rua, Nº, Bairro)"
-                    class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
-                <textarea id="order-notes" placeholder="Observações (Sem cebola, ponto da carne...)"
-                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none h-20 resize-none"></textarea>
-
-                <select id="payment-method" onchange="toggleTroco()"
-                    class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
+                <input type="text" id="customer-address" placeholder="Endereço" class="cart-input hidden">
+                <textarea id="order-notes" placeholder="Observações" class="cart-input h-20"></textarea>
+                <select id="payment-method" onchange="handlePaymentChange()" class="cart-input">
                     <option value="Pix">Pix</option>
                     <option value="Cartão">Cartão</option>
                     <option value="Dinheiro">Dinheiro</option>
                 </select>
-                <input type="text" id="troco-input" placeholder="Troco para quanto?"
-                    class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
+                <input type="text" id="troco-input" placeholder="Troco para quanto?" class="cart-input hidden">
             </div>
 
-            <div class="bg-zinc-900 p-6 rounded-2xl my-6 border border-zinc-800 flex justify-between items-center">
-                <span class="text-zinc-400 font-black uppercase text-xs">Total Final</span>
-                <span id="modal-total" class="text-3xl font-black text-orange-500">R$ 0,00</span>
+            <div class="bg-zinc-900 p-4 rounded-xl my-6 flex justify-between items-center">
+                <span class="font-bold">TOTAL:</span>
+                <span id="modal-total" class="text-2xl font-black text-orange-500">R$ 0,00</span>
             </div>
-
-            <button id="btn-send" onclick="sendWhatsApp()"
-                class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xl flex items-center justify-center gap-3 hover:bg-green-700 text-white shadow-lg">
-                <i class="fab fa-whatsapp text-2xl"></i> Enviar para o WhatsApp
-            </button>
+            <button onclick="sendWhatsApp()" class="w-full bg-green-600 py-4 rounded-xl font-black text-white">ENVIAR
+                WHATSAPP</button>
         </div>
     </div>
 
     <script>
-        const OPEN_HOUR = 18;
-        const CLOSE_HOUR = 23;
-        const CLOSE_MINUTES = 30;
-        let cart = {};
-
-        // 1. Mensagem de Boas-Vindas
-        window.onload = function () {
-            if (!sessionStorage.getItem('welcomeShown')) {
-                const modal = document.getElementById('welcome-modal');
-                const content = document.getElementById('welcome-content');
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    content.classList.remove('scale-90', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 100);
-                sessionStorage.setItem('welcomeShown', 'true');
-            }
-            updateStatus();
-            renderGrid(combos, 'combo-items');
-            renderGrid(burgers, 'burger-items');
-            renderGrid(porcoes, 'portion-items');
-            renderGrid(beverages, 'beverage-items');
-        };
-
-        function closeWelcome() {
-            const modal = document.getElementById('welcome-modal');
-            modal.style.opacity = '0';
-            setTimeout(() => modal.classList.add('hidden'), 500);
-        }
-
-        // 2. Status com Contagem Regressiva
-        function updateStatus() {
-            const now = new Date();
-            const currentTime = now.getHours() * 60 + now.getMinutes();
-            const openTime = OPEN_HOUR * 60;
-            const closeTime = CLOSE_HOUR * 60 + CLOSE_MINUTES;
-            const statusDiv = document.getElementById('status-loja');
-            const btnSend = document.getElementById('btn-send');
-
-            if (currentTime >= openTime && currentTime < closeTime) {
-                const diff = closeTime - currentTime;
-                const h = Math.floor(diff / 60);
-                const m = diff % 60;
-                statusDiv.innerHTML = `<span class="text-green-500">● ABERTO</span> • FECHA EM ${h}h ${m}min`;
-            } else {
-                let nextOpen = openTime - currentTime;
-                if (nextOpen < 0) nextOpen += 1440;
-                const h = Math.floor(nextOpen / 60);
-                const m = nextOpen % 60;
-                statusDiv.innerHTML = `<span class="text-red-500">● FECHADO</span> • ABRE EM ${h}h ${m}min`;
-                document.querySelector('main').classList.add('closed-overlay');
-                btnSend.disabled = true;
-                btnSend.classList.replace('bg-green-600', 'bg-zinc-700');
-            }
-        }
-        setInterval(updateStatus, 60000);
-
-        // 3. Máscara de Telefone
-        function maskPhone(i) {
-            let v = i.value.replace(/\D/g, "");
-            v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-            v = v.replace(/(\d)(\d{4})$/, "$1-$2");
-            i.value = v;
-        }
+        const OPEN_HOUR = 18, CLOSE_HOUR = 23, CLOSE_MINUTES = 30;
+        let cart = JSON.parse(localStorage.getItem('brasa_cart')) || {};
 
         const combos = [
             { name: "Combo Individual", price: 39.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg" },
             { name: "BRASA DUPLO (BARCA)", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 Refris 350ml", img: "barca.jpg" },
             { name: "Combo Econômico", price: 34.90, desc: "Classic Burguer + Refrigerante Lata 350ml", img: "economico.jpg" }
         ];
-
         const burgers = [
             { name: "Na Brasa Prime", price: 52.00, desc: "Dois blends bovinos suculentos preparados na brasa, servidos com o dobro de queijo (Prato e Cheddar) e a perfeição de três camadas de bacon crocante. Para coroar, um ovo caipira de gema brilhante, salada fresca (alface, tomate e cebola roxa) e nossa maionese da casa sem óleo. Tudo isso no pão brioche macio, selado na manteiga.", img: "prime.jpg" },
             { name: "Black na Brasa", price: 48.00, desc: "Pão Black selado na manteiga, recheado com dois blends bovinos suculentos feitos na brasa e bacon crocante. A intensidade do sabor fica por conta do queijo cheddar em dose dupla: duas camadas generosas derretidas mais um molho cheddar bem caprichado por cima.", img: "black.jpg" },
@@ -317,13 +214,14 @@
             { name: "Chee se Burger", price: 26.00, desc: "Blend bovino suculento feito na brasa, coberto com uma camada generosa de queijo cheddar duplo derretido. Finalizado com nossa exclusiva maionese especial da casa (feita sem óleo), no pão brioche macio e selado na manteiga.", img: "chesse.jpg" },
             { name: "Classic Burguer Salada", price: 30.00, desc: "Blend bovino preparado na brasa, queijo prato, alface, tomate, cebola roxa e nossa famosa maionese da casa sem óleo. Servido no pão brioche selado na manteiga.", img: "salada.jpg" },
             { name: "Classic Burguer Salada Especial", price: 38.00, desc: "Blend bovino de 160g preparado na brasa, coberto com bacon super crocante e queijo derretido. Acompanha alface, tomate, cebola roxa e nosso exclusivo molho especial (feito sem óleo). Tudo isso servido no pão brioche macio, selado na manteiga.", img: "saladaespecial.jpg" }
-        ];
 
+        ];
         const porcoes = [
             { name: "Batata Especial 250g", price: 20.00, desc: "Porção de batata frita, bacon e queijo.", img: "batata250.jpg" },
             { name: "Batata Brasa Especial 500g", price: 35.00, desc: "Batata frita, com Cheddar e Bacon.", img: "batata500.jpg" },
             { name: "Aneis de cebola", price: 20.00, desc: "Anéis de cebola empanados.", img: "onion.jpg" }
         ];
+
 
         const beverages = [
             { name: "Coca-Cola 2 Litros", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg" },
@@ -339,73 +237,96 @@
             { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg" }
         ];
 
-        function renderGrid(items, containerId) {
-            const container = document.getElementById(containerId);
+        window.onload = () => {
+            if (!sessionStorage.getItem('w')) {
+                document.getElementById('welcome-modal').classList.remove('hidden');
+                setTimeout(() => { document.getElementById('welcome-content').classList.add('scale-100', 'opacity-100'); }, 100);
+            }
+            renderGrid(combos, 'combo-items');
+            renderGrid(burgers, 'burger-items');
+            renderGrid(porcoes, 'portion-items');
+            renderGrid(beverages, 'beverage-items');
+            updateStatus();
+            setInterval(updateStatus, 1000);
+            updateCart();
+        };
+
+        function closeWelcome() { sessionStorage.setItem('w', 't'); document.getElementById('welcome-modal').classList.add('hidden'); }
+
+        function updateStatus() {
+            const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
+            const open = OPEN_HOUR * 60, close = CLOSE_HOUR * 60 + CLOSE_MINUTES;
+            const badge = document.getElementById('status-badge'), timer = document.getElementById('countdown-timer');
+
+            if (cur >= open && cur < close) {
+                badge.innerHTML = `<span class="text-green-500">● ABERTO</span>`;
+                timer.classList.add('hidden');
+                document.querySelector('main').classList.remove('closed-overlay');
+            } else {
+                badge.innerHTML = `<span class="text-red-500">● FECHADO</span>`;
+                timer.classList.remove('hidden');
+                document.querySelector('main').classList.add('closed-overlay');
+                let t = new Date(); if (now.getHours() >= OPEN_HOUR) t.setDate(t.getDate() + 1);
+                t.setHours(OPEN_HOUR, 0, 0);
+                let d = t - now, h = Math.floor(d / 36e5), m = Math.floor((d % 36e5) / 6e4), s = Math.floor((d % 6e4) / 1000);
+                document.getElementById('timer').innerText = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function renderGrid(items, id) {
+            const container = document.getElementById(id);
             items.forEach(item => {
                 container.innerHTML += `
-                    <div class="item-card flex flex-col" onclick="addToCart('${item.name}', ${item.price}, '${item.img}')">
-                        <div class="img-placeholder aspect-square">
-                            <img src="${item.img}" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300/222/ea580c?text=LANCHE'">
+                <div class="item-card" onclick="addToCart('${item.name}', ${item.price}, '${item.img}')">
+                    <div class="img-container"><img src="${item.img}" onerror="this.src='https://via.placeholder.com/300/222/ea580c?text=BRASAS'"></div>
+                    <div class="p-2 flex flex-col flex-grow">
+                        <h3 class="font-black text-[10px] uppercase text-white">${item.name}</h3>
+                        <p class="text-[9px] text-zinc-500 flex-grow">${item.desc}</p>
+                        <div class="mt-2 flex justify-between items-center">
+                            <span class="text-orange-500 font-black text-xs">R$ ${item.price.toFixed(2)}</span>
+                            <i class="fas fa-plus-circle text-orange-600"></i>
                         </div>
-                        <div class="p-3 flex flex-col flex-grow">
-                            <h3 class="font-black text-[11px] uppercase italic text-zinc-100 leading-tight">${item.name}</h3>
-                            <p class="text-[9px] text-zinc-500 mt-2 flex-grow">${item.desc}</p>
-                            <div class="mt-3 flex justify-between items-center">
-                                <span class="text-orange-500 font-black text-sm">R$ ${item.price.toFixed(2)}</span>
-                                <i class="fas fa-plus-circle text-orange-600"></i>
-                            </div>
-                        </div>
-                    </div>`;
+                    </div>
+                </div>`;
             });
         }
 
-        function addToCart(name, price, img) {
-            cart[name] ? cart[name].qty++ : cart[name] = { price, img, qty: 1 };
-            document.getElementById('cart-bar').classList.remove('hidden');
-            updateCart();
-        }
+        function addToCart(n, p, i) { cart[n] ? cart[n].qty++ : cart[n] = { price: p, img: i, qty: 1 }; save(); }
+        function changeQty(n, d) { cart[n].qty += d; if (cart[n].qty <= 0) delete cart[n]; save(); }
+        function save() { localStorage.setItem('brasa_cart', JSON.stringify(cart)); updateCart(); }
+        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
+        function handleDeliveryChange() { document.getElementById('customer-address').classList.toggle('hidden', document.getElementById('delivery-method').value !== 'entrega'); updateCart(); }
+        function handlePaymentChange() { document.getElementById('troco-input').classList.toggle('hidden', document.getElementById('payment-method').value !== 'Dinheiro'); }
+        function maskPhone(i) { i.value = i.value.replace(/\D/g, "").replace(/^(\d{2})(\d)/g, "($1) $2").replace(/(\d)(\d{4})$/, "$1-$2"); }
 
         function updateCart() {
-            const method = document.getElementById('delivery-method').value;
-            document.getElementById('customer-address').classList.toggle('hidden', method === 'retirada');
-            let subtotal = 0, count = 0, html = '';
+            let sub = 0, count = 0, html = '', method = document.getElementById('delivery-method').value;
             for (let n in cart) {
-                subtotal += cart[n].price * cart[n].qty;
-                count += cart[n].qty;
-                html += `<div class="flex items-center gap-3 bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+                sub += cart[n].price * cart[n].qty; count += cart[n].qty;
+                html += `<div class="flex items-center gap-3 bg-zinc-900 p-2 rounded-xl border border-zinc-800 text-[10px]">
                     <img src="${cart[n].img}" class="w-10 h-10 object-cover rounded-lg">
-                    <div class="flex-grow"><div class="text-[10px] font-bold uppercase">${n}</div><div class="text-orange-500 text-[10px]">R$ ${cart[n].price.toFixed(2)}</div></div>
+                    <div class="flex-grow font-bold uppercase">${n}</div>
                     <div class="flex items-center gap-2">
-                        <button onclick="changeQty('${n}',-1)" class="w-6 h-6 bg-zinc-800 rounded-full text-xs">-</button>
-                        <span class="text-xs font-bold">${cart[n].qty}</span>
-                        <button onclick="changeQty('${n}',1)" class="w-6 h-6 bg-orange-600 rounded-full text-xs">+</button>
+                        <button onclick="changeQty('${n}',-1)" class="w-6 h-6 bg-zinc-800 rounded-full">-</button>
+                        <span>${cart[n].qty}</span>
+                        <button onclick="changeQty('${n}',1)" class="w-6 h-6 bg-orange-600 rounded-full">+</button>
                     </div>
                 </div>`;
             }
-            const total = subtotal + (method === 'entrega' ? 10 : 0);
+            const total = sub + (method === 'entrega' ? 10 : 0);
             document.getElementById('cart-count').innerText = count;
             document.getElementById('total-display').innerText = `R$ ${total.toFixed(2)}`;
             document.getElementById('modal-total').innerText = `R$ ${total.toFixed(2)}`;
-            document.getElementById('cart-list').innerHTML = html || '<p class="text-center text-zinc-500 py-4">Carrinho vazio</p>';
-            if (count === 0) document.getElementById('cart-bar').classList.add('hidden');
+            document.getElementById('cart-list').innerHTML = html || '<p class="text-center">Vazio</p>';
+            document.getElementById('cart-bar').classList.toggle('hidden', count === 0);
         }
 
-        function changeQty(n, d) { cart[n].qty += d; if (cart[n].qty <= 0) delete cart[n]; updateCart(); }
-        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); document.body.classList.toggle('overflow-hidden'); }
-        function toggleTroco() { document.getElementById('troco-input').classList.toggle('hidden', document.getElementById('payment-method').value !== 'Dinheiro'); }
-
         function sendWhatsApp() {
-            const nome = document.getElementById('customer-name').value;
-            const fone = document.getElementById('customer-phone').value;
-            if (!nome || fone.length < 10) return alert("Por favor, preencha Nome e WhatsApp corretamente!");
-
-            let msg = `🔥 *MÃO NA BRASA - PEDIDO*\n\n👤 *Cliente:* ${nome}\n📞 *Fone:* ${fone}\n`;
-            msg += `📍 *Entrega:* ${document.getElementById('delivery-method').value === 'entrega' ? 'Sim' : 'Não'}\n`;
-            if (document.getElementById('delivery-method').value === 'entrega') msg += `🏠 *End:* ${document.getElementById('customer-address').value}\n`;
-            msg += `\n🛒 *ITENS:*\n`;
+            const name = document.getElementById('customer-name').value;
+            if (!name || Object.keys(cart).length === 0) return alert("Preencha seu nome!");
+            let msg = `🔥 *PEDIDO MÃO NA BRASA*\n👤 *Cliente:* ${name}\n`;
             for (let n in cart) msg += `• ${cart[n].qty}x ${n}\n`;
-            msg += `\n💰 *TOTAL:* ${document.getElementById('modal-total').innerText}`;
-
+            msg += `💰 *TOTAL:* ${document.getElementById('modal-total').innerText}`;
             window.location.href = `https://api.whatsapp.com/send?phone=5564992360895&text=${encodeURIComponent(msg)}`;
         }
     </script>
