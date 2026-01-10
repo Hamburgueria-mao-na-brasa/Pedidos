@@ -132,6 +132,7 @@
             <a href="#burguers">Burguers</a>
             <a href="#porcoes">Porções</a>
             <a href="#bebidas">Bebidas</a>
+            <a href="#sobremesas">Sobremesas</a>
         </nav>
     </header>
 
@@ -151,6 +152,10 @@
         <h2 id="bebidas" class="text-orange-500 font-black uppercase text-lg mb-4 border-l-4 border-orange-600 pl-2">🥤
             Bebidas</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="beverage-items"></div>
+        <h2 id="sobremesas" class="text-orange-500 font-black uppercase text-lg mb-4 border-l-4 border-orange-600 pl-2">🍪 Sobremesas</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10" id="dessert-items"></div>
+
+<h2 id="bebidas" ...
     </main>
 
     <div id="cart-bar"
@@ -238,6 +243,12 @@
             { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg" },
             { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg" }
         ];
+
+        const sobremesas = [
+    { name: "Brownie Recheado", price: 15.00, desc: "Brownie artesanal com muito chocolate e recheio cremoso.", img: "brownie.jpg" },
+    { name: "Pudim de Leite Ninho", price: 12.00, desc: "Cremosidade incomparável com calda de caramelo.", img: "pudim.jpg" },
+    { name: "Milkshake 400ml", price: 18.00, desc: "Escolha entre Chocolate, Morango ou Ovomaltine.", img: "milkshake.jpg" }
+];
 
         window.onload = () => {
             if (!sessionStorage.getItem('w')) {
@@ -373,6 +384,7 @@ function sendWhatsApp() {
 </body>
 
 </html>
+
 
 
 
