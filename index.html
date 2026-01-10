@@ -172,23 +172,23 @@
         let cart = JSON.parse(localStorage.getItem('brasa_cart')) || {};
 
         const combos = [
-            { name: "Combo Individual", price: 39.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg" },
-            { name: "BRASA DUPLO (BARCA)", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca.jpg" },
+           { name: "Combo Individual", price: 39.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg" },
+            { name: "BRASA DUPLO", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca.jpg" },
             { name: "Combo Econômico", price: 34.90, desc: "Classic Burguer + Refrigerante Lata 350ml", img: "economico.jpg" }
         ];
 
         const burgers = [
-            { name: "Na Brasa Prime", price: 52.00, desc: "Dois blends bovinos suculentos preparados na brasa, dobro de queijo, bacon crocante e ovo caipira no pão brioche.", img: "prime.jpg" },
-            { name: "Black na Brasa", price: 48.00, desc: "Pão Black, dois blends bovinos, bacon e dose dupla de cheddar (fatias e molho cremoso).", img: "black.jpg" },
-            { name: "Costela Prime", price: 45.00, desc: "Blend bovino, costela desfiada defumada ao barbecue e cream cheese maçaricado no pão de parmesão.", img: "costela.jpg" },
-            { name: "Piscina de Chaddar", price: 45.00, desc: "Burger clássico mergulhado em piscina de cheddar. Acompanha batata e onion rings.", img: "piscina.jpg" },
-            { name: "Bacon Burguer Duplo", price: 49.00, desc: "Dois blends bovinos, bacon super crocante, queijo e molho especial no pão brioche.", img: "image_7bb97d.jpg" },
-            { name: "Bacon Burguer", price: 37.00, desc: "Blend bovino, bacon crocante e queijo prato no pão brioche.", img: "bacon.jpg" },
-            { name: "Bacon Burguer Triplo", price: 59.00, desc: "Três blends bovinos, três camadas de bacon e cebola caramelizada artesanal.", img: "triplobacon.jpg" },
-            { name: "Burguer Abacaxi", price: 38.00, desc: "Blend bovino, abacaxi no mel, banana da terra, queijo e rúcula.", img: "image_7bbfe9.jpg" },
-            { name: "Chee se Burger", price: 26.00, desc: "Blend bovino suculento com queijo cheddar duplo derretido no pão brioche.", img: "chesse.jpg" },
-            { name: "Classic Burguer Salada", price: 30.00, desc: "Blend bovino, queijo prato, salada fresca e maionese da casa.", img: "salada.jpg" },
-            { name: "Classic Burguer Salada Especial", price: 38.00, desc: "Blend 160g, bacon crocante, queijo, salada e molho especial.", img: "saladaespecial.jpg" }
+            { name: "Na Brasa Prime", price: 52.00, desc: "Dois blends bovinos suculentos preparados na brasa, servidos com o dobro de queijo (Prato e Cheddar) e a perfeição de três camadas de bacon crocante. Para coroar, um ovo caipira de gema brilhante, salada fresca (alface, tomate e cebola roxa) e nossa maionese da casa sem óleo. Tudo isso no pão brioche macio, selado na manteiga.", img: "prime.jpg" },
+            { name: "Black na Brasa", price: 48.00, desc: "Pão Black selado na manteiga, recheado com dois blends bovinos suculentos feitos na brasa e bacon crocante. A intensidade do sabor fica por conta do queijo cheddar em dose dupla: duas camadas generosas derretidas mais um molho cheddar bem caprichado por cima.", img: "black.jpg" },
+            { name: "Costela Prime", price: 45.00, desc: "Blend bovino suculento feito na brasa, coroado com costela desfiada e defumada ao molho barbecue. A cremosidade fica por conta do queijo prato e do nosso cream cheese maçaricado na hora, trazendo um toque defumado extra. Servido no exclusivo pão de parmesão selado na manteiga e finalizado com molho especial da casa.", img: "costela.jpg" },
+            { name: "Piscina de Chaddar", price: 45.00, desc: "Nosso burger clássico feito na brasa, com blend bovino suculento e MUITO bacon crocante, servido dentro de uma verdadeira piscina de cheddar cremoso. Para completar o banquete, acompanha uma porção generosa de batatas fritas e anéis de cebola (Onion Rings) para você mergulhar sem moderação.", img: "piscina.jpg" },
+            { name: "Bacon Burguer Duplo", price: 49.00, desc: "Dois blends bovinos suculentos preparados na brasa, acompanhados por duas camadas generosas de bacon super crocante e queijo derretido. Finalizado com nosso molho especial da casa (feito sem óleo) e servido no pão brioche macio, selado na manteiga.", img: "image_7bb97d.jpg" },
+            { name: "Bacon Burguer", price: 37.00, desc: "Blend bovino suculento grelhado na brasa, coberto com fatias generosas de bacon crocante e queijo prato derretido. Finalizado com nosso molho especial da casa (feito sem óleo) e servido no pão brioche macio, selado na manteiga.", img: "bacon.jpg" },
+            { name: "Bacon Burguer Triplo", price: 59.00, desc: "três blends bovinos suculentos feitos na brasa e três camadas generosas de bacon super crocante. Para elevar o nível, adicionamos nossa cebola caramelizada artesanal e a maionese especial da casa (sem óleo). Tudo isso no pão brioche macio, selado na manteiga.", img: "triplobacon.jpg" },
+            { name: "Burguer Abacaxi", price: 38.00, desc: "Blend bovino suculento preparado na brasa, acompanhado de abacaxi chapeado e selado no mel, fatias de banana da terra douradas e queijo prato derretido. O frescor da rúcula traz o equilíbrio perfeito para essa combinação única. Tudo servido no pão brioche macio e selado na manteiga.", img: "image_7bbfe9.jpg" },
+            { name: "Chee se Burger", price: 26.00, desc: "Blend bovino suculento feito na brasa, coberto com uma camada generosa de queijo cheddar duplo derretido. Finalizado com nossa exclusiva maionese especial da casa (feita sem óleo), no pão brioche macio e selado na manteiga.", img: "chesse.jpg" },
+            { name: "Classic Burguer Salada", price: 30.00, desc: "Blend bovino preparado na brasa, queijo prato, alface, tomate, cebola roxa e nossa famosa maionese da casa sem óleo. Servido no pão brioche selado na manteiga.", img: "salada.jpg" },
+            { name: "Classic Burguer Salada Especial", price: 38.00, desc: "Blend bovino de 160g preparado na brasa, coberto com bacon super crocante e queijo derretido. Acompanha alface, tomate, cebola roxa e nosso exclusivo molho especial (feito sem óleo). Tudo isso servido no pão brioche macio, selado na manteiga.", img: "saladaespecial.jpg" }
         ];
 
         const porcoes = [
@@ -201,20 +201,26 @@
         ];
 
         const sobremesas = [
-            { name: "Brigadeiro Sortido", price: 16.00, desc: "Caixa com 4 unidades", img: "brigadeiro.jpg" },
-            { name: "Brawnie com Sorvete", price: 22.00, desc: "Artesanal com sorvete de creme", img: "Brawnie com Sorvete.jpg" },
-            { name: "Fatia Pizza de Brownie", price: 27.00, desc: "Ninho e Nutella", img: "Browniepizza.jpg " },           
-            { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado e caramelo", img: "pudim.jpg" }
+           { name: "Brigadeiro Sortido", price: 16.00, desc: "Caixa com 4 brigadeiros sortidos", img: "brigadeiro.jpg" },
+            { name: "Brawnie com Sorvete", price: 22.00, desc: "Brownie de chocolate artesanal , sorvete de creme e Ganashe de chocolate nobre", img: "Brawnie com Sorvete.jpg" },
+            { name: "Brawnie com Geleia", price: 22.00, desc: "Brownie artesanal, geleia de frutas vermelhas da casa e ganache de chocolate", img: "Brawnie com Geleia.jpg" },
+            { name: "Brawnie", price: 12.00, desc: "Brownie artesanal", img: "Brownie.jpg" },
+            { name: "Fatia Estilo Pizza de Brownie ", price: 27.00, desc: "Fatia estilo pizza de brownie artesanal com brigadeiro de ninho e Nutella “decoração pode variar“ ", img: "Browniepizza.jpg " },          
+            { name: "Pudim Cremoso", price: 12.00, desc: "Pudim de leite condensado com calda de caramelo.", img: "pudim.jpg" }
         ];
 
         const beverages = [
             { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg" },
             { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg" },
-            { name: "Coca-Cola Lata", price: 6.00, desc: "350ml", img: "coca350.jpg" },
-            { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml", img: "guaranaM350.jpg" },
+            { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg" },
+            { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg" },
+            { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg" },
             { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg" },
-            { name: "Suco Detox", price: 12.00, desc: "400ml Natural", img: "detox.jpg" },
-            { name: "Água Mineral", price: 4.00, desc: "500ml", img: "agua.jpg" }
+            { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg" },
+            { name: "Suco Detox", price: 12.00, desc: "Couve, Gengibre, Abacaxi, Cenoura e Hortelã 400ml Natural", img: "detox.jpg" },
+            { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg" },
+            { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg" },
+            { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg" }
         ];
 
         window.onload = () => {
@@ -346,3 +352,4 @@
     </script>
 </body>
 </html>
+
