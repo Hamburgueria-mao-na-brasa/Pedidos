@@ -226,14 +226,15 @@
 
 
         const beverages = [
-            { name: "Coca-Cola 2 Litros", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg" },
-            { name: "Guaraná Antarctica 2L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg" },
+            { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg" },
+            { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg" },
             { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg" },
             { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg" },
-            { name: "Guaraná Lata", price: 6.00, desc: "350ml gelada", img: "guarana350.jpg" },
-            { name: "Fanta Laranja Lata", price: 6.00, desc: "350ml gelada", img: "fanta350.jpg" },
-            { name: "Suco de Laranja", price: 10.00, desc: "400ml Natural", img: "sucodelaranja.jpg" },
-            { name: "Suco de Acerola", price: 10.00, desc: "400ml Natural", img: "acelora.jpg" },
+            { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg" },
+            { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg" },
+            { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg" },
+            { name: "Suco de Laranja com Acerola", price: 12.00, desc: "400ml Natural", img: "aceloralaranja.jpg" },
+            { name: "Suco Detox", price: 12.00, desc: "400ml Natural", img: "detox.jpg" },
             { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg" },
             { name: "Água com Gás", price: 4.00, desc: "500ml", img: "aguag.jpg" },
             { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg" }
@@ -323,7 +324,7 @@
             document.getElementById('cart-bar').classList.toggle('hidden', count === 0);
         }
 
-     function sendWhatsApp() {
+function sendWhatsApp() {
     // Pegando os valores dos campos
     const name = document.getElementById('customer-name').value;
     const phone = document.getElementById('customer-phone').value;
@@ -373,6 +374,7 @@
 </body>
 
 </html>
+
 
 
 
