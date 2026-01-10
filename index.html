@@ -323,18 +323,57 @@
             document.getElementById('cart-bar').classList.toggle('hidden', count === 0);
         }
 
-        function sendWhatsApp() {
-            const name = document.getElementById('customer-name').value;
-            if (!name || Object.keys(cart).length === 0) return alert("Preencha seu nome!");
-            let msg = `🔥 *PEDIDO MÃO NA BRASA*\n👤 *Cliente:* ${name}\n`;
-            for (let n in cart) msg += `• ${cart[n].qty}x ${n}\n`;
-            msg += `💰 *TOTAL:* ${document.getElementById('modal-total').innerText}`;
-            window.location.href = `https://api.whatsapp.com/send?phone=5564992360895&text=${encodeURIComponent(msg)}`;
-        }
+     function sendWhatsApp() {
+    // Pegando os valores dos campos
+    const name = document.getElementById('customer-name').value;
+    const phone = document.getElementById('customer-phone').value;
+    const method = document.getElementById('delivery-method').value;
+    const address = document.getElementById('customer-address').value;
+    const payment = document.getElementById('payment-method').value;
+    const troco = document.getElementById('troco-input').value;
+    const obs = document.getElementById('order-notes').value;
+
+    // Validações básicas
+    if (!name) return alert("❌ Por favor, digite seu nome!");
+    if (method === 'entrega' && !address) return alert("❌ Por favor, digite o endereço para entrega!");
+    if (Object.keys(cart).length === 0) return alert("❌ Seu carrinho está vazio!");
+
+    // Montando a mensagem
+    let msg = `🔥 *NOVO PEDIDO: MÃO NA BRASA*\n`;
+    msg += `------------------------------\n`;
+    msg += `👤 *Cliente:* ${name}\n`;
+    msg += `📞 *WhatsApp:* ${phone}\n`;
+    msg += `📍 *Tipo:* ${method === 'entrega' ? '📦 Entrega' : '🏪 Retirada na Loja'}\n`;
+    
+    // Se for entrega, adiciona o endereço na mensagem
+    if (method === 'entrega') {
+        msg += `🏠 *Endereço:* ${address}\n`;
+    }
+
+    msg += `\n🛒 *ITENS DO PEDIDO:*\n`;
+    for (let n in cart) {
+        msg += `• ${cart[n].qty}x ${n} (R$ ${(cart[n].price * cart[n].qty).toFixed(2)})\n`;
+    }
+
+    if (obs) msg += `\n📝 *Observação:* ${obs}\n`;
+
+    msg += `\n💳 *Pagamento:* ${payment}`;
+    if (payment === 'Dinheiro' && troco) {
+        msg += ` (Troco para R$ ${troco})`;
+    }
+    
+    msg += `\n\n💰 *VALOR TOTAL:* ${document.getElementById('modal-total').innerText}\n`;
+    msg += `------------------------------`;
+
+    // Enviar para o WhatsApp
+    const phoneZap = "5564992360895";
+    window.location.href = `https://api.whatsapp.com/send?phone=${phoneZap}&text=${encodeURIComponent(msg)}`;
+}
     </script>
 </body>
 
 </html>
+
 
 
 
