@@ -21,6 +21,7 @@
             color: #fff;
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .bg-fixed-body {
@@ -29,7 +30,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(5, 5, 5, 0.98)),
+            background: linear-gradient(rgba(0, 0, 0, 0.88), rgba(5, 5, 5, 0.98)),
                 url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -40,13 +41,62 @@
             font-family: 'Syncopate', sans-serif;
         }
 
+        /* BOAS VINDAS */
+        #welcome-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(20px);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-card {
+            background: linear-gradient(145deg, #262626, #000000);
+            border-radius: 40px;
+            padding: 50px 30px;
+            max-width: 400px;
+            width: 92%;
+            text-align: center;
+            border: 1px solid rgba(234, 88, 12, 0.3);
+            box-shadow: 0 0 50px rgba(234, 88, 12, 0.2);
+        }
+
+        .cta-button {
+            background: linear-gradient(90deg, #ea580c, #f97316);
+            color: white;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 22px;
+            border-radius: 20px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
+            overflow: hidden;
+        }
+
+        .img-box {
+            width: 105px;
+            height: 105px;
+            border-radius: 20px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            background-color: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-btn {
@@ -68,43 +118,16 @@
             box-shadow: 0 0 20px rgba(234, 88, 12, 0.4);
         }
 
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 10px;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-
         .tag-badge {
             position: absolute;
-            top: -8px;
-            right: 12px;
-            padding: 4px 10px;
+            top: 10px;
+            left: 10px;
+            padding: 5px 12px;
             border-radius: 8px;
-            font-size: 8px;
+            font-size: 9px;
             font-weight: 900;
             text-transform: uppercase;
             z-index: 10;
-        }
-
-        .input-brasa {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 12px;
-            color: white;
-            width: 100%;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .resumo-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 20px;
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -116,61 +139,61 @@
 <body>
     <div class="bg-fixed-body"></div>
 
+    <div id="welcome-overlay">
+        <div class="welcome-card animate__animated animate__fadeInUp">
+            <div class="mb-6 inline-block p-4 rounded-full bg-orange-600/10 border border-orange-600/20">
+                <i class="fas fa-fire text-orange-600 text-3xl"></i>
+            </div>
+            <h2 class="font-title text-2xl mb-4 italic tracking-tighter text-white">O FOGO JÁ <br><span
+                    class="text-orange-600">ESTÁ ACESO!</span></h2>
+            <p class="text-zinc-400 text-sm leading-relaxed mb-10">
+                Sinta o aroma da brasa e a suculência do verdadeiro burger artesanal.
+                <span class="text-zinc-200 block mt-2 font-bold italic">A melhor mordida da sua vida começa aqui.</span>
+            </p>
+            <button onclick="closeWelcome()" class="cta-button">
+                🔥 QUERO MATAR MINHA FOME AGORA
+            </button>
+        </div>
+    </div>
+
     <div id="free-delivery-banner"
         class="bg-orange-600 text-white text-[10px] font-black uppercase tracking-[0.2em] py-2 text-center sticky top-0 z-[110]">
         🚚 Entrega Grátis acima de R$ 100,00!
     </div>
 
     <header class="sticky top-[30px] z-[100] bg-black/80 backdrop-blur-2xl border-b border-white/10 p-4">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="font-title text-xl text-center tracking-tighter uppercase mb-2">Mão na <span
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="font-title text-xl tracking-tighter uppercase mb-2">Mão na <span
                     class="text-orange-600">Brasa</span></h1>
-
-            <div class="flex flex-col items-center mb-6">
-                <div id="status-container" class="flex items-center gap-2 mb-1">
-                    <span id="status-tag"
-                        class="status-badge bg-zinc-800 text-zinc-400 uppercase italic">Verificando...</span>
-                </div>
-                <p id="countdown-text" class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest"></p>
+            <div id="status-tag"
+                class="inline-block px-4 py-1 rounded-full text-[9px] font-black uppercase italic mb-4">Verificando...
             </div>
-
-            <nav class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+            <nav class="flex gap-2 overflow-x-auto no-scrollbar">
                 <a href="#section-combos" class="nav-btn active" onclick="setActive(this)">🔥 Combos</a>
                 <a href="#section-burgers" class="nav-btn" onclick="setActive(this)">🍔 Burgers</a>
                 <a href="#section-porcoes" class="nav-btn" onclick="setActive(this)">🍟 Porções</a>
-                <a href="#section-sobremesas" class="nav-btn" onclick="setActive(this)">🍪 Doces</a>
+                <a href="#section-sobremesas" class="nav-btn" onclick="setActive(this)">🍩 Sobremesas</a>
                 <a href="#section-bebidas" class="nav-btn" onclick="setActive(this)">🥤 Bebidas</a>
             </nav>
         </div>
     </header>
 
     <main class="max-w-3xl mx-auto p-4 pb-40">
-        <section class="text-center py-12 animate__animated animate__fadeIn">
-            <p class="text-orange-500 font-black text-xs uppercase tracking-[0.4em] mb-2">Bem-vindo(a) à</p>
-            <h2 class="font-title text-4xl mb-4 italic tracking-tighter">MÃO NA BRASA</h2>
-            <p class="text-zinc-400 text-sm max-w-xs mx-auto">O verdadeiro sabor do churrasco artesanal!</p>
-        </section>
-
         <div id="menu-container"></div>
     </main>
 
     <div id="modal-item"
         class="fixed inset-0 bg-black/95 z-[200] hidden items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[35px] p-8">
+        <div class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[40px] p-8">
             <h3 id="modal-name"
                 class="font-bold text-orange-500 uppercase text-center mb-6 tracking-widest text-lg italic"></h3>
-
             <div id="modal-addons-list" class="space-y-3 mb-6 max-h-60 overflow-y-auto no-scrollbar"></div>
-
             <div id="obs-container">
                 <p class="text-[10px] font-bold text-zinc-500 uppercase mb-2 ml-1">Alguma Observação?</p>
-                <textarea id="modal-obs" placeholder="Ex: Sem cebola, ponto da carne..."
-                    class="input-brasa h-20 mb-6"></textarea>
+                <textarea id="modal-obs" placeholder="Ex: Sem cebola, carne mal passada..."
+                    class="bg-white/5 border border-white/10 rounded-2xl p-4 text-white w-full h-20 outline-none focus:border-orange-600 transition-colors"></textarea>
             </div>
-
-            <button onclick="addToCart()"
-                class="w-full bg-orange-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg">Adicionar
-                ao Pedido</button>
+            <button onclick="addToCart()" class="cta-button mt-6">Confirmar e Adicionar</button>
             <button onclick="closeModal('modal-item')"
                 class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Voltar</button>
         </div>
@@ -179,41 +202,46 @@
     <div id="modal-checkout"
         class="fixed inset-0 bg-black/98 z-[300] hidden items-center justify-center p-4 backdrop-blur-xl">
         <div
-            class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[35px] p-8 shadow-2xl overflow-y-auto max-h-[90vh] no-scrollbar">
-            <h3 class="font-bold text-orange-500 uppercase text-center mb-4 tracking-widest text-lg italic">Seu Pedido
+            class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[40px] p-8 shadow-2xl overflow-y-auto max-h-[90vh] no-scrollbar">
+            <h3 class="font-bold text-orange-500 uppercase text-center mb-4 tracking-widest text-lg italic">Quase lá!
             </h3>
-            <div id="resumo-pedido" class="resumo-box text-xs space-y-3"></div>
-
+            <div id="resumo-pedido"
+                class="bg-white/5 border border-white/10 rounded-2xl p-5 text-[11px] mb-6 space-y-3"></div>
             <div class="space-y-4">
-                <input type="text" id="client-name" placeholder="Seu Nome" class="input-brasa">
-                <select id="order-type" class="input-brasa" onchange="toggleAddress(); updateResumo();">
-                    <option value="entrega">Entrega (Delivery)</option>
-                    <option value="retirada">Retirada no Local</option>
+                <input type="text" id="client-name" placeholder="Seu Nome"
+                    class="bg-white/5 border border-white/10 rounded-xl p-4 w-full outline-none focus:border-orange-600">
+                <select id="order-type"
+                    class="bg-white/5 border border-white/10 rounded-xl p-4 w-full outline-none focus:border-orange-600"
+                    onchange="toggleAddress(); updateResumo();">
+                    <option value="entrega">Entregar em casa 🚚</option>
+                    <option value="retirada">Retirar no local 📍</option>
                 </select>
                 <div id="address-fields">
-                    <input type="text" id="client-address" placeholder="Rua, Número e Bairro" class="input-brasa">
+                    <input type="text" id="client-address" placeholder="Endereço Completo"
+                        class="bg-white/5 border border-white/10 rounded-xl p-4 w-full outline-none focus:border-orange-600">
                 </div>
-                <select id="payment-method" class="input-brasa">
-                    <option value="Pix">Pix</option>
-                    <option value="Cartão">Cartão</option>
+                <select id="payment-method"
+                    class="bg-white/5 border border-white/10 rounded-xl p-4 w-full outline-none focus:border-orange-600">
+                    <option value="Pix">Pagar no Pix</option>
+                    <option value="Cartão">Cartão (Levamos a máquina)</option>
                     <option value="Dinheiro">Dinheiro</option>
                 </select>
             </div>
             <button onclick="sendToWhatsApp()"
-                class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-6">Enviar
-                para o WhatsApp</button>
+                class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8 shadow-lg">FINALIZAR
+                PEDIDO NO WHATSAPP</button>
             <button onclick="closeModal('modal-checkout')"
-                class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Corrigir</button>
+                class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4 italic">Alterar Escolha</button>
         </div>
     </div>
 
     <div id="cart-bar"
-        class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-orange-600 p-5 rounded-[26px] hidden z-[150] shadow-2xl flex items-center justify-between cursor-pointer"
+        class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-orange-600 p-5 rounded-[30px] hidden z-[150] shadow-2xl flex items-center justify-between cursor-pointer animate__animated animate__slideInUp"
         onclick="openCheckout()">
         <div class="flex items-center gap-4">
             <span id="cart-qty"
-                class="bg-black/20 w-9 h-9 flex items-center justify-center rounded-xl font-black text-sm">0</span>
-            <span class="font-black uppercase text-xs tracking-widest italic">Finalizar Pedido</span>
+                class="bg-black/20 w-10 h-10 flex items-center justify-center rounded-full font-black text-sm">0</span>
+            <span class="font-black uppercase text-[11px] tracking-widest italic">Ver Carrinho</span>
         </div>
         <span id="cart-total" class="font-black text-xl italic tracking-tighter">R$ 0,00</span>
     </div>
@@ -221,12 +249,8 @@
     <script>
         let cart = [];
         let currentItem = null;
-        let isStoreOpen = false;
-
         const WHATSAPP_NUMBER = "556492360895";
         const TAXA_ENTREGA = 10.00;
-        const OPEN_HOUR = 15;
-        const CLOSE_HOUR = 23;
 
         const burgerExtras = [
             { name: "Carne Extra", price: 9.90 },
@@ -240,8 +264,8 @@
 
         const menu = {
             combos: [
-                { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "" },
-                { name: "BRASA DUPLO", price: 89.99, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 coca cola 350ml", img: "barca.jpg", hasAddons: true, tag: "vendido" },
+                { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "chef" },
+                { name: "BRASA DUPLO", price: 94.99, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 coca cola 350ml", img: "barca.jpg", hasAddons: true, tag: "vendido" },
             ],
             burgers: [
                 { name: "Na Brasa Prime", price: 52.00, desc: "Dois blends, dobro de queijo, 3 bacon e ovo.", img: "prime.jpg", hasAddons: true, tag: "chef" },
@@ -280,36 +304,32 @@
             ]
         };
 
-        function checkStatus() {
-            const now = new Date();
-            const hour = now.getHours();
-            const tag = document.getElementById('status-tag');
-            const cd = document.getElementById('countdown-text');
-            if (hour >= OPEN_HOUR && hour < CLOSE_HOUR) {
-                isStoreOpen = true;
-                tag.innerText = "● ABERTO AGORA";
-                tag.className = "status-badge bg-green-500/10 text-green-500 italic border border-green-500/20";
-                cd.innerText = `FECHAMOS ÀS ${CLOSE_HOUR}:00`;
-            } else {
-                isStoreOpen = false;
-                tag.innerText = "● FECHADO";
-                tag.className = "status-badge bg-red-500/10 text-red-500 italic border border-red-500/20";
-                cd.innerText = `ABRIMOS ÀS ${OPEN_HOUR}:00`;
-            }
+        function closeWelcome() {
+            const overlay = document.getElementById('welcome-overlay');
+            overlay.classList.add('animate__animated', 'animate__fadeOut');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 500);
         }
 
         function render() {
             const container = document.getElementById('menu-container');
             container.innerHTML = "";
             Object.keys(menu).forEach(cat => {
-                let html = `<section id="section-${cat}" class="mb-14"><h2 class="text-orange-500 font-title text-[10px] mb-6 tracking-[0.3em] uppercase flex items-center gap-3"><span class="w-10 h-[1px] bg-orange-600"></span> ${cat}</h2><div class="grid gap-4">`;
+                let html = `<section id="section-${cat}" class="mb-12"><h2 class="text-orange-500 font-title text-[10px] mb-6 tracking-[0.4em] uppercase flex items-center gap-3"><span class="w-10 h-[1px] bg-orange-600"></span> ${cat}</h2><div class="grid gap-5">`;
                 menu[cat].forEach(p => {
-                    let tagHtml = p.tag === 'vendido' ? `<span class="tag-badge bg-orange-600 text-white">Mais Vendido</span>` : p.tag === 'chef' ? `<span class="tag-badge bg-yellow-500 text-black">Indicação do Chef</span>` : "";
-                    html += `<div class="glass-card flex items-center p-3 gap-4" onclick="openModal('${p.name}', ${p.price}, ${p.hasAddons})">
-                        ${tagHtml}
-                        <div class="img-box" style="background-image: url('${p.img}')"></div>
-                        <div class="flex-grow"><h3 class="font-bold text-sm uppercase italic">${p.name}</h3><span class="text-orange-500 font-black italic">R$ ${p.price.toFixed(2)}</span></div>
-                        <div class="text-orange-600 opacity-50"><i class="fas fa-plus-circle text-xl"></i></div></div>`;
+                    let tagHtml = p.tag === 'vendido' ? `<span class="tag-badge bg-orange-600 text-white">🔥 Famoso</span>` : p.tag === 'chef' ? `<span class="tag-badge bg-yellow-500 text-black">🌟 Favorito</span>` : "";
+                    html += `
+                        <div class="glass-card flex p-3 gap-4" onclick="openModal('${p.name}', ${p.price}, ${p.hasAddons})">
+                            ${tagHtml}
+                            <div class="img-box" style="background-image: url('${p.img}')"></div>
+                            <div class="flex flex-col justify-center flex-grow">
+                                <h3 class="font-bold text-sm uppercase italic mb-1">${p.name}</h3>
+                                <p class="text-[11px] text-zinc-400 leading-snug mb-2 line-clamp-2 italic">${p.desc}</p>
+                                <span class="text-orange-500 font-black italic">R$ ${p.price.toFixed(2)}</span>
+                            </div>
+                        </div>`;
                 });
                 container.innerHTML += html + `</div></section>`;
             });
@@ -318,14 +338,9 @@
         function openModal(name, price, hasAddons) {
             currentItem = { name, price, addons: [], obs: "" };
             document.getElementById('modal-name').innerText = name;
-
-            // Controle dos Adicionais
             const list = document.getElementById('modal-addons-list');
-            list.innerHTML = hasAddons ? `<p class="text-[10px] font-bold text-orange-500 uppercase mb-3">Adicionais:</p>` + burgerExtras.map(a => `<label class="flex justify-between items-center bg-white/5 p-4 rounded-2xl mb-2 cursor-pointer border border-white/5"><span class="text-[11px] uppercase">${a.name} (+R$${a.price.toFixed(2)})</span><input type="checkbox" class="w-5 h-5 accent-orange-600" onchange="updateAddon('${a.name}', ${a.price}, this.checked)"></label>`).join('') : "";
-
-            // REMOVE OBSERVAÇÃO DE BEBIDAS E DOCES (itens sem adicionais)
-            document.getElementById('obs-container').style.display = hasAddons ? 'block' : 'none';
-
+            list.innerHTML = hasAddons ? `<p class="text-[9px] font-black text-orange-500 uppercase mb-4 tracking-widest">Adicionais:</p>` + burgerExtras.map(a => `<label class="flex justify-between items-center bg-white/5 p-4 rounded-2xl mb-2 cursor-pointer border border-white/5"><span class="text-[11px] uppercase font-bold">${a.name} (+R$${a.price.toFixed(2)})</span><input type="checkbox" class="w-6 h-6 accent-orange-600 rounded-lg" onchange="updateAddon('${a.name}', ${a.price}, this.checked)"></label>`).join('') : "";
+            document.getElementById('obs-container').style.display = 'block';
             document.getElementById('modal-item').style.display = 'flex';
         }
 
@@ -348,56 +363,51 @@
             document.getElementById('cart-qty').innerText = cart.length;
             document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
             document.getElementById('cart-bar').style.display = cart.length > 0 ? 'flex' : 'none';
-            document.getElementById('free-delivery-banner').innerText = total >= 100 ? "🎉 VOCÊ GANHOU ENTREGA GRÁTIS!" : `🚚 Faltam R$ ${(100 - total).toFixed(2)} para Entrega Grátis`;
         }
 
         function updateResumo() {
             const resumo = document.getElementById('resumo-pedido');
-            let html = ""; let subtotal = 0;
+            let html = ""; let sub = 0;
             cart.forEach(item => {
-                let vItem = item.price; item.addons.forEach(a => vItem += a.price); subtotal += vItem;
-                html += `<div class="border-b border-white/10 pb-2 mb-2"><div class="flex justify-between font-bold text-white uppercase italic"><span>${item.name}</span><span>R$ ${vItem.toFixed(2)}</span></div>`;
-                if (item.addons.length > 0) html += `<p class="text-[10px] text-zinc-500 italic">+ ${item.addons.map(a => a.name).join(', ')}</p>`;
-                if (item.obs) html += `<p class="text-[10px] text-orange-500/70">Obs: ${item.obs}</p>`;
-                html += `</div>`;
+                let v = item.price; item.addons.forEach(a => v += a.price); sub += v;
+                html += `<div class="flex justify-between"><span><b>${item.name}</b></span><span>R$ ${v.toFixed(2)}</span></div>`;
             });
             const type = document.getElementById('order-type').value;
-            let taxa = (type === 'entrega' && subtotal < 100) ? TAXA_ENTREGA : 0;
-            html += `<div class="flex justify-between pt-2"><span>Subtotal:</span><span>R$ ${subtotal.toFixed(2)}</span></div>`;
-            html += `<div class="flex justify-between"><span>Entrega:</span><span>${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2)}</span></div>`;
-            html += `<div class="flex justify-between font-black text-orange-500 text-sm mt-2 uppercase"><span>Total:</span><span>R$ ${(subtotal + taxa).toFixed(2)}</span></div>`;
+            const taxa = (type === 'entrega' && sub < 100) ? TAXA_ENTREGA : 0;
+            html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-zinc-400"><span>Entrega:</span><span>${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2)}</span></div>`;
+            html += `<div class="flex justify-between text-orange-500 font-black text-sm uppercase"><span>Total:</span><span>R$ ${(sub + taxa).toFixed(2)}</span></div>`;
             resumo.innerHTML = html;
         }
 
-        function openCheckout() {
-            if (!isStoreOpen) return alert("Estamos fechados!");
-            updateResumo();
-            document.getElementById('modal-checkout').style.display = 'flex';
-        }
-
+        function openCheckout() { updateResumo(); document.getElementById('modal-checkout').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function toggleAddress() { document.getElementById('address-fields').style.display = document.getElementById('order-type').value === 'entrega' ? 'block' : 'none'; }
+        function setActive(el) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
 
         function sendToWhatsApp() {
             const name = document.getElementById('client-name').value;
-            if (!name) return alert("Diga seu nome!");
-            let totalItens = 0;
-            let msg = `*MÃO NA BRASA - PEDIDO*\n------------------------------\n*Cliente:* ${name}\n*Tipo:* ${document.getElementById('order-type').value.toUpperCase()}\n\n`;
-            cart.forEach(item => {
-                let iT = item.price; msg += `*${item.name.toUpperCase()}*\n`;
-                item.addons.forEach(a => { iT += a.price; msg += ` + ${a.name}\n`; });
-                if (item.obs) msg += ` _Obs: ${item.obs}_\n`;
-                msg += ` Valor: R$ ${iT.toFixed(2)}\n\n`;
-                totalItens += iT;
+            if (!name) return alert("Por favor, diga seu nome!");
+            let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n\n`;
+            let total = 0;
+            cart.forEach(i => {
+                let it = i.price; msg += `⭐ *${i.name}*\n`;
+                i.addons.forEach(a => { it += a.price; msg += `  + ${a.name}\n`; });
+                if (i.obs) msg += `  _Obs: ${i.obs}_\n`;
+                msg += `  Sub: R$ ${it.toFixed(2)}\n\n`;
+                total += it;
             });
-            let taxa = (document.getElementById('order-type').value === 'entrega' && totalItens < 100) ? TAXA_ENTREGA : 0;
-            msg += `------------------------------\n*TOTAL: R$ ${(totalItens + taxa).toFixed(2)}*`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+            const type = document.getElementById('order-type').value;
+            const taxa = (type === 'entrega' && total < 100) ? TAXA_ENTREGA : 0;
+            msg += `--------------------------\n*TOTAL: R$ ${(total + taxa).toFixed(2)}*`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function setActive(el) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
+        const h = new Date().getHours();
+        const tag = document.getElementById('status-tag');
+        if (h >= 15 && h < 23) { tag.innerText = "● ABERTO AGORA"; tag.classList.add("bg-green-500/20", "text-green-500"); }
+        else { tag.innerText = "● FECHADO"; tag.classList.add("bg-red-500/20", "text-red-500"); }
 
-        checkStatus(); render();
+        render();
     </script>
 </body>
 
