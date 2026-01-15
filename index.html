@@ -285,7 +285,7 @@
                 { name: "Aneis de cebola", price: 20.00, desc: "Crocantes.", img: "onion.jpg", hasAddons: false, tag: "" },
                 { name: "Batata Especial de Strogonoff", price: 27.90, desc: "Batata, strogonoff e catupiry.", img: "bstrogonoff.jpg", hasAddons: false, tag: "" },
                 { name: "Batata Especial de Costela", price: 27.90, desc: "Batata, costela e catupiry.", img: "bcostela.jpg", hasAddons: false, tag: "chef" },
-                { name: "Batata Especial de Calabresa", price: 27.90, desc: "Batata, calabresa, bacon, mussarela.", img: "bmussarela.jpg", hasAddons: false, tag: "" }
+                { name: "Batata Especial de Calabresa", price: 27.90, desc: "Batata, calabresa, bacon, mussarela.", img: "bmussarela.jpg", hasAddons: false, tag: "" },
                 { name: "Batata Especial de Carne", price: 27.90, desc: "Batata, strogonoff de carne e catupiry.", img: "bcarne.jpg", hasAddons: false, tag: "" }
             ],
             sobremesas: [
@@ -364,7 +364,10 @@
 
         function updateCartBar() {
             let total = 0;
-            cart.forEach(i => { total += i.price; i.addons.forEach(a => total += a.price); });
+            cart.forEach(i => { 
+                total += i.price; 
+                i.addons.forEach(a => total += a.price); 
+            });
             document.getElementById('cart-qty').innerText = cart.length;
             document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
             document.getElementById('cart-bar').style.display = cart.length > 0 ? 'flex' : 'none';
@@ -373,15 +376,46 @@
         function updateResumo() {
             const resumo = document.getElementById('resumo-pedido');
             let html = ""; let sub = 0;
-            cart.forEach(item => {
-                let v = item.price; item.addons.forEach(a => v += a.price); sub += v;
-                html += `<div class="flex justify-between"><span><b>${item.name}</b></span><span>R$ ${v.toFixed(2)}</span></div>`;
-            });
+
+            if (cart.length === 0) {
+                html = '<p class="text-center text-zinc-500 py-4 italic">Carrinho vazio...</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    let v = item.price; 
+                    item.addons.forEach(a => v += a.price); 
+                    sub += v;
+                    html += `
+                        <div class="flex flex-col border-b border-white/5 pb-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-zinc-200"><b>${item.name}</b></span>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-orange-500 font-bold">R$ ${v.toFixed(2)}</span>
+                                    <button onclick="removeFromCart(${index})" class="text-red-500/60 p-1"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                            ${item.addons.length > 0 ? `<p class="text-[9px] text-zinc-500">+ ${item.addons.map(a => a.name).join(', ')}</p>` : ''}
+                            ${item.obs ? `<p class="text-[9px] text-orange-600 italic">Obs: ${item.obs}</p>` : ''}
+                        </div>`;
+                });
+            }
+
             const type = document.getElementById('order-type').value;
             const taxa = (type === 'entrega' && sub < 100) ? TAXA_ENTREGA : 0;
-            html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-zinc-400"><span>Entrega:</span><span>${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2)}</span></div>`;
-            html += `<div class="flex justify-between text-orange-500 font-black text-sm uppercase"><span>Total:</span><span>R$ ${(sub + taxa).toFixed(2)}</span></div>`;
+            
+            html += `
+                <div class="pt-3 space-y-1">
+                    <div class="flex justify-between text-zinc-400"><span>Subtotal:</span><span>R$ ${sub.toFixed(2)}</span></div>
+                    <div class="flex justify-between text-zinc-400"><span>Entrega:</span><span>${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2)}</span></div>
+                    <div class="flex justify-between text-orange-500 font-black text-sm uppercase border-t border-white/10 pt-2"><span>Total:</span><span>R$ ${(sub + taxa).toFixed(2)}</span></div>
+                </div>`;
             resumo.innerHTML = html;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartBar();
+            updateResumo();
+            if (cart.length === 0) closeModal('modal-checkout');
         }
 
         function openCheckout() { updateResumo(); document.getElementById('modal-checkout').style.display = 'flex'; }
@@ -392,7 +426,14 @@
         function sendToWhatsApp() {
             const name = document.getElementById('client-name').value;
             if (!name) return alert("Por favor, diga seu nome!");
-            let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n\n`;
+            
+            let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n`;
+            msg += `*Tipo:* ${document.getElementById('order-type').value === 'entrega' ? 'Entrega 🚚' : 'Retirada 📍'}\n`;
+            if(document.getElementById('order-type').value === 'entrega') {
+                msg += `*Endereço:* ${document.getElementById('client-address').value}\n`;
+            }
+            msg += `*Pagamento:* ${document.getElementById('payment-method').value}\n\n`;
+            
             let total = 0;
             cart.forEach(i => {
                 let it = i.price; msg += `⭐ *${i.name}*\n`;
@@ -417,11 +458,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
