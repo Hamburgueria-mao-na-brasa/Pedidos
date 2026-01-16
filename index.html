@@ -41,7 +41,6 @@
             font-family: 'Syncopate', sans-serif;
         }
 
-        /* BOAS VINDAS */
         #welcome-overlay {
             position: fixed;
             inset: 0;
@@ -290,17 +289,17 @@
                 { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado.", img: "pudim.jpg", hasAddons: false, tag: "" }
             ],
             bebidas: [
-                 { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg" },
-                { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg" },
-                { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg" },
-                { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg" },
-                { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg" },
-                { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg" },
-                { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg" },
-                { name: "Suco Detox", price: 12.00, desc: "Couve, Gengibre, Abacaxi, Cenoura e Hortelã 400ml Natural", img: "detox.jpg" },
-                { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg" },
-                { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg" },
-                { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg" }
+                { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg", hasAddons: false },
+                { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg", hasAddons: false },
+                { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg", hasAddons: false },
+                { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg", hasAddons: false },
+                { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg", hasAddons: false },
+                { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg", hasAddons: false },
+                { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg", hasAddons: false },
+                { name: "Suco Detox", price: 12.00, desc: "Couve, Gengibre, Abacaxi, Cenoura e Hortelã 400ml Natural", img: "detox.jpg", hasAddons: false },
+                { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg", hasAddons: false },
+                { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg", hasAddons: false },
+                { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg", hasAddons: false }
             ]
         };
 
@@ -395,12 +394,13 @@
             }
 
             const type = document.getElementById('order-type').value;
-            const taxa = (type === 'entrega' && sub < 100) ? TAXA_ENTREGA : 0;
+            // TAXA FIXA SEM REGRA DE FRETE GRÁTIS
+            const taxa = (type === 'entrega') ? TAXA_ENTREGA : 0;
             
             html += `
                 <div class="pt-3 space-y-1">
                     <div class="flex justify-between text-zinc-400"><span>Subtotal:</span><span>R$ ${sub.toFixed(2)}</span></div>
-                    <div class="flex justify-between text-zinc-400"><span>Entrega:</span><span>${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2)}</span></div>
+                    <div class="flex justify-between text-zinc-400"><span>Entrega:</span><span>R$ ${taxa.toFixed(2)}</span></div>
                     <div class="flex justify-between text-orange-500 font-black text-sm uppercase border-t border-white/10 pt-2"><span>Total:</span><span>R$ ${(sub + taxa).toFixed(2)}</span></div>
                 </div>`;
             resumo.innerHTML = html;
@@ -423,8 +423,10 @@
             if (!name) return alert("Por favor, diga seu nome!");
             
             let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n`;
-            msg += `*Tipo:* ${document.getElementById('order-type').value === 'entrega' ? 'Entrega 🚚' : 'Retirada 📍'}\n`;
-            if(document.getElementById('order-type').value === 'entrega') {
+            const type = document.getElementById('order-type').value;
+            msg += `*Tipo:* ${type === 'entrega' ? 'Entrega 🚚' : 'Retirada 📍'}\n`;
+            
+            if(type === 'entrega') {
                 msg += `*Endereço:* ${document.getElementById('client-address').value}\n`;
             }
             msg += `*Pagamento:* ${document.getElementById('payment-method').value}\n\n`;
@@ -437,21 +439,30 @@
                 msg += `  Sub: R$ ${it.toFixed(2)}\n\n`;
                 total += it;
             });
-            const type = document.getElementById('order-type').value;
-            const taxa = (type === 'entrega' && total < 100) ? TAXA_ENTREGA : 0;
-            msg += `--------------------------\n*TOTAL: R$ ${(total + taxa).toFixed(2)}*`;
+
+            const taxaFinal = (type === 'entrega') ? TAXA_ENTREGA : 0;
+            msg += `--------------------------\n*TOTAL: R$ ${(total + taxaFinal).toFixed(2)}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
-        const h = new Date().getHours();
-        const taxa = (type === 'entrega') ? TAXA_ENTREGA : 0;
-        if (h >= 19 && h < 23:30) { tag.innerText = "● ABERTO AGORA"; tag.classList.add("bg-green-500/20", "text-green-500"); }
-        else { tag.innerText = "● FECHADO"; tag.classList.add("bg-red-500/20", "text-red-500"); }
+        // AJUSTE DE STATUS E HORÁRIO
+        const now = new Date();
+        const hr = now.getHours();
+        const min = now.getMinutes();
+        const currentTime = hr + (min / 60);
+        const tag = document.getElementById('status-tag');
+        
+        // Abre as 19:00 e fecha as 23:30
+        if (currentTime >= 19 && currentTime < 23.5) { 
+            tag.innerText = "● ABERTO AGORA"; 
+            tag.classList.add("bg-green-500/20", "text-green-500"); 
+        } else { 
+            tag.innerText = "● FECHADO NO MOMENTO"; 
+            tag.classList.add("bg-red-500/20", "text-red-500"); 
+        }
 
         render();
     </script>
 </body>
 
 </html>
-
-
