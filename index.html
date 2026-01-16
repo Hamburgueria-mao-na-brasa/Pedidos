@@ -156,11 +156,6 @@
         </div>
     </div>
 
-    <div id="free-delivery-banner"
-        class="bg-orange-600 text-white text-[10px] font-black uppercase tracking-[0.2em] py-2 text-center sticky top-0 z-[110]">
-        🚚 Entrega Grátis acima de R$ 100,00!
-    </div>
-
     <header class="sticky top-[30px] z-[100] bg-black/80 backdrop-blur-2xl border-b border-white/10 p-4">
         <div class="max-w-3xl mx-auto text-center">
             <h1 class="font-title text-xl tracking-tighter uppercase mb-2">Mão na <span
@@ -443,13 +438,13 @@
                 total += it;
             });
             const type = document.getElementById('order-type').value;
-        
+            const taxa = (type === 'entrega' && total < 100) ? TAXA_ENTREGA : 0;
             msg += `--------------------------\n*TOTAL: R$ ${(total + taxa).toFixed(2)}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
         const h = new Date().getHours();
-        const tag = document.getElementById('status-tag');
+        const taxa = (type === 'entrega') ? TAXA_ENTREGA : 0;
         if (h >= 19 && h < 23:30) { tag.innerText = "● ABERTO AGORA"; tag.classList.add("bg-green-500/20", "text-green-500"); }
         else { tag.innerText = "● FECHADO"; tag.classList.add("bg-red-500/20", "text-red-500"); }
 
@@ -458,4 +453,5 @@
 </body>
 
 </html>
+
 
