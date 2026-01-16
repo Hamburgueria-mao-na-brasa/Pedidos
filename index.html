@@ -443,14 +443,14 @@
                 total += it;
             });
             const type = document.getElementById('order-type').value;
-            const taxa = (type === 'entrega' && total < 100) ? TAXA_ENTREGA : 0;
+        
             msg += `--------------------------\n*TOTAL: R$ ${(total + taxa).toFixed(2)}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
         const h = new Date().getHours();
         const tag = document.getElementById('status-tag');
-        if (h >= 15 && h < 23) { tag.innerText = "● ABERTO AGORA"; tag.classList.add("bg-green-500/20", "text-green-500"); }
+        if (h >= 19 && h < 23:30) { tag.innerText = "● ABERTO AGORA"; tag.classList.add("bg-green-500/20", "text-green-500"); }
         else { tag.innerText = "● FECHADO"; tag.classList.add("bg-red-500/20", "text-red-500"); }
 
         render();
@@ -458,3 +458,4 @@
 </body>
 
 </html>
+
