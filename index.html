@@ -344,8 +344,8 @@ const getPromotionalPrice = (product) => {
     }
 
     // 2. Promoções Diárias
-    if (today === 2 && product.name === "Classic Burguer Salada Especial") return 29.90;
-    if (today === 4 && product.name === "Bacon Burguer") return 29.90;
+    if (today === 2 && product.name === "") return 29.90;
+    if (today === 4 && product.name === "") return 29.90;
 
     return price;
 };
@@ -552,3 +552,4 @@ function render() {
 </body>
 
 </html>
+
