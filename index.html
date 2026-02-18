@@ -441,7 +441,7 @@
             msg += `*Taxa Entrega:* R$ ${taxaFinal.toFixed(2)}\n`;
             
             if(type === 'entrega') {
-                msg += `_Obs: Verificar isenção para o bairro local._\n`;
+                msg += `_Obs: Verificar se o endereço é no mesmo bairro (Isento de Taxa)._\n`;
             }
             
             msg += `*TOTAL: R$ ${(subtotal + taxaFinal).toFixed(2)}*`;
