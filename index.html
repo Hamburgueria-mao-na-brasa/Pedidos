@@ -383,16 +383,13 @@
                 });
             }
 
-            const diaSemana = new Date().getDay(); // 0:Dom, 1:Seg, 2:Ter...
-            const ehPromoDia = (diaSemana === 2 || diaSemana === 5); // Terça ou Sexta
             const type = document.getElementById('order-type').value;
-            const taxa = (type === 'entrega' && !ehPromoDia) ? TAXA_ENTREGA : 0;
+            const taxa = (type === 'entrega') ? TAXA_ENTREGA : 0;
             
             html += `
                 <div class="pt-3 space-y-1">
                     <div class="flex justify-between text-zinc-400"><span>Subtotal:</span><span>R$ ${sub.toFixed(2)}</span></div>
                     <div class="flex justify-between text-zinc-400"><span>Entrega:</span><span>R$ ${taxa.toFixed(2)}</span></div>
-                    ${ehPromoDia && type === 'entrega' ? '<div class="text-[9px] text-green-500 font-bold uppercase">🔥 PROMO: Entrega Grátis hoje!</div>' : ''}
                     <div class="flex justify-between text-orange-500 font-black text-sm uppercase border-t border-white/10 pt-2"><span>Total:</span><span>R$ ${(sub + taxa).toFixed(2)}</span></div>
                 </div>`;
             
@@ -437,13 +434,11 @@
                 subtotal += it;
             });
 
-            const diaSemana = new Date().getDay();
-            const ehPromoDia = (diaSemana === 2 || diaSemana === 5);
-            const taxaFinal = (type === 'entrega' && !ehPromoDia) ? TAXA_ENTREGA : 0;
+            const taxaFinal = (type === 'entrega') ? TAXA_ENTREGA : 0;
 
             msg += `--------------------------\n`;
             msg += `*Subtotal:* R$ ${subtotal.toFixed(2)}\n`;
-            msg += `*Taxa Entrega:* R$ ${taxaFinal.toFixed(2)}${ehPromoDia && type === 'entrega' ? ' (PROMO GRÁTIS)' : ''}\n`;
+            msg += `*Taxa Entrega:* R$ ${taxaFinal.toFixed(2)}\n`;
             
             if(type === 'entrega') {
                 msg += `_Obs: Verificar isenção para o bairro local._\n`;
@@ -472,4 +467,3 @@
 </body>
 
 </html>
-
