@@ -96,7 +96,6 @@
     </div>
 
     <script>
-        // REGISTRO DO SERVICE WORKER PARA VIRAR APP
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(() => console.log("App Pronto!"));
         }
@@ -109,26 +108,61 @@
         const burgerExtras = [
             { name: "Carne Extra", price: 9.90 },
             { name: "Bacon Extra", price: 5.90 },
-            { name: "Queijo Extra", price: 3.90 }
+            { name: "Queijo Extra", price: 3.90 },
+            { name: "Alface Extra", price: 0.90 },
+            { name: "Tomate Extra", price: 0.90 },
+            { name: "Cebola Extra", price: 0.90 },
+            { name: "Molho Extra", price: 0.90 }
         ];
 
         const menu = {
             combos: [
-                { name: "Barca Brasa", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Bebida", img: "combo.jpg", hasAddons: true, tag: "chef" }
+                { name: "Barca", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca1.jpg", hasAddons: true, tag: "vendido" },
+                { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "chef" },
+                { name: "Brasa Duplo", price: 91.90, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 coca cola 350ml", img: "barca.jpg", hasAddons: true, tag: "vendido" },
             ],
             burgers: [
-                { name: "Na Brasa Prime", price: 51.90, desc: "Dois blends, dobro de queijo, 3 bacon e ovo.", img: "prime.jpg", hasAddons: true, tag: "chef" },
-                { name: "Black na Brasa", price: 47.90, desc: "Pão Black, dois blends e dose tripla de cheddar.", img: "black.jpg", hasAddons: true, tag: "vendido" }
+                { name: "Na Brasa Prime", price: 51.90, desc: "Dois blends, dobro de queijo, 3 bacon e ovo caipira.", img: "prime.jpg", hasAddons: true, tag: "chef" },
+                { name: "Black na Brasa", price: 47.90, desc: "Pão Black, dois blends e dose tripla de cheddar.", img: "black.jpg", hasAddons: true, tag: "vendido" },
+                { name: "Costela Prime", price: 47.90, desc: "Blend, costela desfiada BBQ e cream cheese maçaricado.", img: "costela.jpg", hasAddons: true, tag: "" },
+                { name: "Piscina de Chaddar", price: 44.90, desc: "Burger com bacon dentro de piscina de cheddar.", img: "piscina.jpg", hasAddons: true, tag: "vendido" },
+                { name: "Bacon Burguer Duplo", price: 49.00, desc: "Dois blends, duas camadas de bacon e molho.", img: "duplo.jpg", hasAddons: true, tag: "" },
+                { name: "Bacon Burguer", price: 36.90, desc: "Blend, bacon crocante e queijo prato.", img: "bacon.jpg", hasAddons: true, tag: "" },
+                { name: "Bacon Burguer Triplo", price: 58.90, desc: "Três blends, três bacon e cebola caramelizada.", img: "triplobacon.jpg", hasAddons: true, tag: "" },
+                { name: "Burguer Abacaxi", price: 38.00, desc: "Blend, abacaxi no mel, banana da terra e rúcula.", img: "abacaxi.jpg", hasAddons: true, tag: "" },
+                { name: "Chee se Burger", price: 25.90, desc: "Blend suculento, cheddar duplo e maionese.", img: "chesse.jpg", hasAddons: true, tag: "" },
+                { name: "Classic Burguer Salada", price: 29.90, desc: "Blend, queijo prato, salada e maionese.", img: "salada.jpg", hasAddons: true, tag: "" },
+                { name: "Classic Burguer Salada Especial", price: 37.90, desc: "Blend 160g, bacon, queijo e salada.", img: "saladaespecial.jpg", hasAddons: true, tag: "" }
             ],
             porcoes: [
-                { name: "Batata Frita 500g", price: 34.90, desc: "Cheddar ou Queijo e Bacon crocante.", img: "batata500.jpg", hasAddons: false, tag: "vendido" }
+                { name: "Batata Frita Especial 250g", price: 19.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata250.jpg", hasAddons: false },
+                { name: "Batata Frita Especial 500g", price: 34.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata500.jpg", hasAddons: false, tag: "vendido" },
+                { name: "Aneis de cebola", price: 19.90, desc: "Anéis crocantes.", img: "onion.jpg", hasAddons: false },
+                { name: "Batata Especial de Strogonoff", price: 27.90, desc: "Recheada com strogonoff e catupiry.", img: "bstrogonoff.jpg", hasAddons: false },
+                { name: "Batata Especial de Costela", price: 27.90, desc: "Costela desfiada e catupiry.", img: "bcostela.jpg", hasAddons: false, tag: "chef" },
+                { name: "Batata Especial de Calabresa", price: 27.90, desc: "Calabresa, bacon e mussarela.", img: "bmussarela.jpg", hasAddons: false },
+                { name: "Batata Especial de Carne", price: 27.90, desc: "Strogonoff de carne e catupiry.", img: "bcarne.jpg", hasAddons: false }
             ],
             sobremesas: [
-                { name: "Pizza de Brownie", price: 27.00, desc: "Ninho e Nutella original.", img: "Browniepizza.jpg", hasAddons: false, tag: "vendido" }
+                { name: "Brigadeiro Sortido", price: 16.00, desc: "Caixa com 4 brigadeiros.", img: "brigadeiro.jpg", hasAddons: false },
+                { name: "Brawnie com Sorvete", price: 22.00, desc: "Sorvete e Ganache de chocolate.", img: "browniesorvete.jpg", hasAddons: false, tag: "chef" },
+                { name: "Brawnie com Geleia", price: 22.00, desc: "Geleia de frutas vermelhas.", img: "browniegeleia.jpg", hasAddons: false },
+                { name: "Brawnie", price: 12.00, desc: "Brownie artesanal.", img: "brownie.jpg", hasAddons: false },
+                { name: "Pizza de Brownie", price: 27.00, desc: "Ninho e Nutella original.", img: "Browniepizza.jpg", hasAddons: false, tag: "vendido" },
+                { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado e caramelo.", img: "pudim.jpg", hasAddons: false }
             ],
             bebidas: [
-                { name: "Coca-Cola 1.5L", price: 13.00, desc: "Gelada", img: "coca2l.jpg", hasAddons: false, tag: "" }
+                { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg", hasAddons: false },
+                { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg", hasAddons: false },
+                { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg", hasAddons: false },
+                { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg", hasAddons: false },
+                { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg", hasAddons: false },
+                { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg", hasAddons: false, tag: "vendido" },
+                { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg", hasAddons: false },
+                { name: "Suco Detox", price: 12.00, desc: "Natural e funcional.", img: "detox.jpg", hasAddons: false },
+                { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg", hasAddons: false },
+                { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg", hasAddons: false },
+                { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg", hasAddons: false }
             ]
         };
 
@@ -162,7 +196,7 @@
         function setActive(el) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
         function sendToWhatsApp() {
             const name = document.getElementById('client-name').value; if(!name) return alert("Diga seu nome!");
-            let msg = `*MÃO NA BRASA*\nCliente: ${name}\n\n`; let total = 0;
+            let msg = `*MÃO NA BRASA - PEDIDO*\n*Cliente:* ${name}\n\n`; let total = 0;
             cart.forEach(i => { let it = i.price; msg += `⭐ *${i.name}*\n`; i.addons.forEach(a => { it += a.price; msg += `  + ${a.name}\n`; }); if(i.obs) msg += `  _Obs: ${i.obs}_\n`; msg += `  R$ ${it.toFixed(2)}\n\n`; total += it; });
             const type = document.getElementById('order-type').value; const taxa = (type === 'entrega') ? TAXA_ENTREGA : 0;
             msg += `*TOTAL: R$ ${(total + taxa).toFixed(2)}*`;
@@ -171,7 +205,7 @@
 
         const tagStatus = document.getElementById('status-tag');
         const h = new Date().getHours();
-        if(h >= 19 && h < 23) { tagStatus.innerText = "● ABERTO AGORA"; tagStatus.classList.add("bg-green-500/20", "text-green-500"); }
+        if(h >= 19 || h < 1) { tagStatus.innerText = "● ABERTO AGORA"; tagStatus.classList.add("bg-green-500/20", "text-green-500"); }
         else { tagStatus.innerText = "● FECHADO"; tagStatus.classList.add("bg-red-500/20", "text-red-500"); }
         render();
     </script>
