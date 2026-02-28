@@ -143,7 +143,7 @@
                 <select id="payment-method" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none"><option value="Pix">Pix</option><option value="Cartão">Cartão</option><option value="Dinheiro">Dinheiro</option></select>
             </div>
             <button onclick="sendToWhatsApp()" class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8">FINALIZAR NO WHATSAPP</button>
-            <button onclick="closeModal('modal-checkout')" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Corrigir</button>
+            <button onclick="closeModal('modal-checkout')" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Continuar Comprando</button>
         </div>
     </div>
 
@@ -235,6 +235,7 @@
         function openModal(name, price, hasAddons) {
             currentItem = { name, price, addons: [], obs: "" };
             document.getElementById('modal-name').innerText = name;
+            document.getElementById('modal-obs').value = "";
             const list = document.getElementById('modal-addons-list');
             list.innerHTML = hasAddons ? `<p class="text-[9px] font-black text-orange-500 uppercase mb-4 tracking-widest">Turbine seu pedido:</p>` + burgerExtras.map(a => `<label class="flex justify-between items-center bg-white/5 p-4 rounded-2xl mb-2 cursor-pointer border border-white/5"><span class="text-[11px] uppercase font-bold">${a.name} (+R$${a.price.toFixed(2)})</span><input type="checkbox" class="w-6 h-6 accent-orange-600 rounded-lg" onchange="updateAddon('${a.name}', ${a.price}, this.checked)"></label>`).join('') : "";
             document.getElementById('obs-container').style.display = hasAddons ? 'block' : 'none';
@@ -251,6 +252,13 @@
             cart.push({ ...currentItem }); closeModal('modal-item'); updateCartBar();
         }
 
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            if(cart.length === 0) closeModal('modal-checkout');
+            updateCartBar();
+            updateResumo();
+        }
+
         function updateCartBar() {
             let total = 0; cart.forEach(i => { total += i.price; i.addons.forEach(a => total += a.price); });
             document.getElementById('cart-qty').innerText = cart.length;
@@ -259,19 +267,34 @@
         }
 
         function updateResumo() {
-            const resumo = document.getElementById('resumo-pedido'); let html = ""; let sub = 0;
+            const resumo = document.getElementById('resumo-pedido'); 
+            let html = ""; let sub = 0;
             const isEntrega = document.getElementById('order-type').value === 'entrega';
-            cart.forEach(item => {
+            
+            cart.forEach((item, index) => {
                 let v = item.price; item.addons.forEach(a => v += a.price); sub += v;
-                html += `<div class="flex justify-between"><span><b>${item.name}</b></span><span>R$ ${v.toFixed(2)}</span></div>`;
+                html += `
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-white">${item.name}</span>
+                            ${item.addons.map(a => `<span class="text-[9px] text-zinc-500">+ ${a.name}</span>`).join('')}
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-white">R$ ${v.toFixed(2)}</span>
+                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400 p-1">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>`;
             });
+
             if(isEntrega) {
                 html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-zinc-400"><span>Taxa de Entrega:</span><span>R$ ${DELIVERY_FEE.toFixed(2)}</span></div>`;
                 sub += DELIVERY_FEE;
             } else {
                 html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-orange-400"><span>Retirada:</span><span>Grátis</span></div>`;
             }
-            html += `<div class="flex justify-between text-orange-500 font-black text-sm uppercase"><span>Total:</span><span>R$ ${sub.toFixed(2)}</span></div>`;
+            html += `<div class="flex justify-between text-orange-500 font-black text-sm uppercase mt-2"><span>Total:</span><span>R$ ${sub.toFixed(2)}</span></div>`;
             resumo.innerHTML = html;
         }
 
@@ -294,6 +317,7 @@
             });
             if(type === 'entrega') {
                 const addr = document.getElementById('client-address').value;
+                if(!addr) return alert("Diga o endereço!");
                 msg += `*Endereço:* ${addr}\n*Entrega:* R$ ${DELIVERY_FEE.toFixed(2)}\n`;
                 total += DELIVERY_FEE;
             }
@@ -302,13 +326,12 @@
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
         }
 
-        // LÓGICA DE HORÁRIO E DIA DA SEMANA
         const tagStatus = document.getElementById('status-tag');
         const now = new Date();
         const hour = now.getHours();
-        const day = now.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+        const day = now.getDay(); 
 
-        if(day === 1) { // SEGUNDA-FEIRA SEMPRE FECHADO
+        if(day === 1) { 
             tagStatus.innerText = "● FECHADO (SEGUNDA)";
             tagStatus.classList.add("bg-red-500/20", "text-red-500");
         } else if(hour >= 19 || hour < 1) {
