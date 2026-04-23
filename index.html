@@ -161,193 +161,42 @@
         let cart = [];
         let currentItem = null;
 
-        const burgerExtras = [
-            { name: "Carne Extra", price: 7.90 },
-            { name: "Bacon Extra", price: 5.90 },
-            { name: "Queijo Extra", price: 3.90 },
-            { name: "Salada Extra", price: 0.90 },
-            { name: "Cebola Extra", price: 0.90 },
-            { name: "Molho Extra", price: 0.90 },
-            { name: "Qeuijo Enpanado", price: 8.90 },
-            { name: "Frango empanado price": 9.90 },
-            { name: "Queijo cheddar", price: 5.90 },
-            { name: "Molho Extra", price: 0.90 },
-            { name: "Molho cheddar", price: 7.90 }
+<script>
+const burgerExtras = [
+    { name: "Carne Extra", price: 7.90 },
+    { name: "Bacon Extra", price: 5.90 },
+    { name: "Queijo Extra", price: 3.90 },
+    { name: "Salada Extra", price: 0.90 },
+    { name: "Cebola Extra", price: 0.90 },
+    { name: "Molho Extra", price: 0.90 },
+    { name: "Queijo Empanado", price: 8.90 },
+    { name: "Frango empanado", price: 9.90 },
+    { name: "Queijo cheddar", price: 5.90 },
+    { name: "Molho cheddar", price: 7.90 }
 ];
-        const menu = {
-            combos: [
-                { name: "Barca", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca1.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "chef" },
-                { name: "Brasa Duplo", price: 91.90, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 coca cola 350ml", img: "barca.jpg", hasAddons: true, tag: "vendido" }
-            ],
-            burgers: [
-                { name: "Na Brasa Prime", price: 44.99, desc: "Dois blends, dobro de queijo, 3 bacon e ovo.", img: "prime.jpg", hasAddons: true, tag: "chef" },
-                { name: "Chee se burguer duplo", price: 35,90, desc: " Dois blends e dose tripla de cheddar E Bacon.", img: "black.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Costela Prime", price: 47.90, desc: "Blend, costela desfiada e cream cheese maçaricado.", img: "costela.jpg", hasAddons: true, tag: "" },
-                { name: "Piscina de Chaddar", price: 37.99, desc: "Burger com bacon dentro de piscina de cheddar.", img: "piscina.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Bacon Burguer Duplo", price: 39.99, desc: "Dois blends, duas camadas de bacon e molho.", img: "duplo.jpg", hasAddons: true, tag: "" },
-                { name: "Bacon Burguer", price: 36.90, desc: "Blend, bacon crocante e queijo prato.", img: "bacon.jpg", hasAddons: true, tag: "" },
-                { name: "Bacon Burguer Triplo", price: 58.90, desc: "Três blends, três bacon e cebola caramelizada.", img: "triplobacon.jpg", hasAddons: true, tag: "" },
-                { name: "Chee se Burger", price: 29,90, desc: "Blend suculento, cheddar duplo e Bacon.", img: "chesse.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer Salada", price: 24.99, desc: "Blend, queijo prato, salada e maionese.", img: "salada.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer bacon caramelizado", price: 33.99, desc: "Blend 160g, bacon, queijo e salada.", img: "saladaespecial.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer Salada Especial", price: 29.99, desc: "Blend 160g, bacon, queijo e salada.", img: "saladaespecial.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer x tudo", price: 35.99, desc: "Blend 160g, bacon, queijo, ovo, salsicha, alface, tomate, cebola e abacaxi .", img: "saladaespecial.jpg",hasAddons: true, tag: ""}               
-            ],
-            porcoes: [    
-                { name: "Batata Frita Especial 250g", price: 19.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata250.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Frita Especial 500g", price: 34.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata500.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Aneis de cebola", price: 19.90, desc: "Crocantes.", img: "onion.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Strogonoff", price: 27.90, desc: "Batata, strogonoff e catupiry.", img: "bstrogonoff.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Costela", price: 27.90, desc: "Batata, costela e catupiry.", img: "bcostela.jpg", hasAddons: false, tag: "chef" },
-                { name: "Batata Especial de Calabresa", price: 27.90, desc: "Batata, calabresa, bacon, mussarela.", img: "bmussarela.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Carne", price: 27.90, desc: "Batata, strogonoff de carne e catupiry.", img: "bcarne.jpg", hasAddons: false, tag: "" }
-            ],
-            sobremesas: [
-                { name: "Brigadeiro Sortido", price: 16.00, desc: "Caixa com 4.", img: "brigadeiro.jpg", hasAddons: false, tag: "" },
-                { name: "Brawnie com Sorvete", price: 22.00, desc: "Sorvete e Ganache.", img: "Brawnie com Sorvete.jpg", hasAddons: false, tag: "chef" },
-                { name: "Pizza de Brownie", price: 27.00, desc: "Ninho e Nutella.", img: "Browniepizza.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado.", img: "pudim.jpg", hasAddons: false, tag: "" }
-            ],
-            bebidas: [
-                { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg", hasAddons: false },
-                { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg", hasAddons: false },
-                { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg", hasAddons: false },
-                { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg", hasAddons: false },
-                { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg", hasAddons: false },
-                { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg", hasAddons: false },
-                { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg", hasAddons: false },
-                { name: "Suco Detox", price: 12.00, desc: "Couve, Gengibre, Abacaxi, Cenoura e Hortelã 400ml Natural", img: "detox.jpg", hasAddons: false },
-                { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg", hasAddons: false },
-                { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg", hasAddons: false },
-                { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg", hasAddons: false }
-            ]
-        };
+</script>
 
-        function closeWelcome() { document.getElementById('welcome-overlay').style.display = 'none'; document.body.style.overflow = 'auto'; }
+<script>
+const menu = {
+    burgers: [
+        { name: "Cheese Burger Duplo", price: 35.90, desc: "Dois blends e cheddar com bacon.", img: "black.jpg", hasAddons: true },
+        { name: "Cheese Burger", price: 29.90, desc: "Blend com cheddar e bacon.", img: "chesse.jpg", hasAddons: true },
+        { name: "Piscina de Cheddar", price: 37.99, desc: "Burger com bacon na piscina de cheddar.", img: "piscina.jpg", hasAddons: true }
+    ]
+};
+</script>
 
-        function render() {
-            const container = document.getElementById('menu-container'); container.innerHTML = "";
-            Object.keys(menu).forEach(cat => {
-                let html = `<section id="section-${cat}" class="mb-10"><h2 class="text-orange-500 font-title text-[10px] mb-6 tracking-[0.4em] uppercase flex items-center gap-3"><span class="w-10 h-[1px] bg-orange-600"></span> ${cat}</h2><div class="grid gap-5">`;
-                menu[cat].forEach(p => {
-                    let tagHtml = p.tag === 'vendido' ? `<span class="tag-badge bg-orange-600 text-white">🔥 Famoso</span>` : p.tag === 'chef' ? `<span class="tag-badge bg-yellow-500 text-black">🌟 Chef</span>` : "";
-                    html += `<div class="glass-card flex p-3 gap-4" onclick="openModal('${p.name}', ${p.price}, ${p.hasAddons})">${tagHtml}<div class="img-box" style="background-image: url('${p.img}')"></div><div class="flex flex-col justify-center flex-grow"><h3 class="font-bold text-sm uppercase italic mb-1">${p.name}</h3><p class="text-[11px] text-zinc-400 leading-snug mb-2 line-clamp-2 italic">${p.desc}</p><span class="text-orange-500 font-black italic">R$ ${p.price.toFixed(2)}</span></div></div>`;
-                });
-                container.innerHTML += html + `</div></section>`;
-            });
-        }
+<script>
+// ajuste de horário
+const now = new Date();
+const hour = now.getHours();
+const day = now.getDay();
 
-        function openModal(name, price, hasAddons) {
-            currentItem = { name, price, addons: [], obs: "" };
-            document.getElementById('modal-name').innerText = name;
-            document.getElementById('modal-obs').value = "";
-            const list = document.getElementById('modal-addons-list');
-            list.innerHTML = hasAddons ? `<p class="text-[9px] font-black text-orange-500 uppercase mb-4 tracking-widest">Turbine seu pedido:</p>` + burgerExtras.map(a => `<label class="flex justify-between items-center bg-white/5 p-4 rounded-2xl mb-2 cursor-pointer border border-white/5"><span class="text-[11px] uppercase font-bold">${a.name} (+R$${a.price.toFixed(2)})</span><input type="checkbox" class="w-6 h-6 accent-orange-600 rounded-lg" onchange="updateAddon('${a.name}', ${a.price}, this.checked)"></label>`).join('') : "";
-            document.getElementById('obs-container').style.display = hasAddons ? 'block' : 'none';
-            document.getElementById('modal-item').style.display = 'flex';
-        }
-
-        function updateAddon(name, price, checked) {
-            if (checked) currentItem.addons.push({ name, price });
-            else currentItem.addons = currentItem.addons.filter(a => a.name !== name);
-        }
-
-        function addToCart() {
-            currentItem.obs = document.getElementById('modal-obs').value;
-            cart.push({ ...currentItem }); closeModal('modal-item'); updateCartBar();
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            if(cart.length === 0) closeModal('modal-checkout');
-            updateCartBar();
-            updateResumo();
-        }
-
-        function updateCartBar() {
-            let total = 0; cart.forEach(i => { total += i.price; i.addons.forEach(a => total += a.price); });
-            document.getElementById('cart-qty').innerText = cart.length;
-            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
-            document.getElementById('cart-bar').style.display = cart.length > 0 ? 'flex' : 'none';
-        }
-
-        function updateResumo() {
-            const resumo = document.getElementById('resumo-pedido'); 
-            let html = ""; let sub = 0;
-            const isEntrega = document.getElementById('order-type').value === 'entrega';
-            
-            cart.forEach((item, index) => {
-                let v = item.price; item.addons.forEach(a => v += a.price); sub += v;
-                html += `
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex flex-col">
-                            <span class="font-bold text-white">${item.name}</span>
-                            ${item.addons.map(a => `<span class="text-[9px] text-zinc-500">+ ${a.name}</span>`).join('')}
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-white">R$ ${v.toFixed(2)}</span>
-                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400 p-1">
-                                <i class="fas fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>`;
-            });
-
-            if(isEntrega) {
-                html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-zinc-400"><span>Taxa de Entrega:</span><span>R$ ${DELIVERY_FEE.toFixed(2)}</span></div>`;
-                sub += DELIVERY_FEE;
-            } else {
-                html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-orange-400"><span>Retirada:</span><span>Grátis</span></div>`;
-            }
-            html += `<div class="flex justify-between text-orange-500 font-black text-sm uppercase mt-2"><span>Total:</span><span>R$ ${sub.toFixed(2)}</span></div>`;
-            resumo.innerHTML = html;
-        }
-
-        function openCheckout() { updateResumo(); document.getElementById('modal-checkout').style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function toggleAddress() { document.getElementById('address-fields').style.display = document.getElementById('order-type').value === 'entrega' ? 'block' : 'none'; }
-        function setActive(el) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
-
-        function sendToWhatsApp() {
-            const name = document.getElementById('client-name').value; if(!name) return alert("Diga seu nome!");
-            const type = document.getElementById('order-type').value;
-            let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n*Tipo:* ${type.toUpperCase()}\n\n`; 
-            let total = 0;
-            cart.forEach(i => {
-                let it = i.price; msg += `⭐ *${i.name}*\n`;
-                i.addons.forEach(a => { it += a.price; msg += `  + ${a.name}\n`; });
-                if(i.obs) msg += `  _Obs: ${i.obs}_\n`;
-                msg += `  Sub: R$ ${it.toFixed(2)}\n\n`;
-                total += it;
-            });
-            if(type === 'entrega') {
-                const addr = document.getElementById('client-address').value;
-                if(!addr) return alert("Diga o endereço!");
-                msg += `*Endereço:* ${addr}\n*Entrega:* R$ ${DELIVERY_FEE.toFixed(2)}\n`;
-                total += DELIVERY_FEE;
-            }
-            msg += `*PAGAMENTO:* ${document.getElementById('payment-method').value}\n`;
-            msg += `*TOTAL: R$ ${total.toFixed(2)}*`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
-        }
-
-        const tagStatus = document.getElementById('status-tag');
-        const now = new Date();
-        const hour = now.getHours();
-        const day = now.getDay(); 
-
-        if(day === 1) { 
-            tagStatus.innerText = "● FECHADO (SEGUNDA)";
-            tagStatus.classList.add("bg-red-500/20", "text-red-500");
-        } else if(hour >= 19 || hour < 1) {
-            tagStatus.innerText = "● ABERTO AGORA";
-            tagStatus.classList.add("bg-green-500/20", "text-green-500");
-        } else {
-            tagStatus.innerText = "● FECHADO";
-            tagStatus.classList.add("bg-red-500/20", "text-red-500");
-        }
-        render();
-    </script>
-</body>
-</html>
+if(day === 1){
+    tagStatus.innerText = "● FECHADO (SEGUNDA)";
+} else if(hour >= 19 || hour <= 0){
+    tagStatus.innerText = "● ABERTO AGORA";
+} else {
+    tagStatus.innerText = "● FECHADO";
+}
+</script>
