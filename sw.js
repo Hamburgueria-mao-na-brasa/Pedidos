@@ -1,5 +1,5 @@
 const CACHE_NAME = 'maonabrasa-v1';
-const assets = ['index.html', 'manifest.json', 'logo.png'];
+const assets = ['index.html', 'admin.html', 'manifest.json', 'maonabrasa.png.jpg'];
 
 self.addEventListener('install', (e) => {
     e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(assets)));

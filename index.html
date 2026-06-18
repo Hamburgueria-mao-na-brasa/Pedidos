@@ -10,10 +10,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="maonabrasa.png.jpg">
+    <link rel="apple-touch-icon" href="maonabrasa.png.jpg">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
@@ -171,6 +172,7 @@
                 <a href="#section-porcoes" class="nav-btn" onclick="setActive(this)">🍟 Porções</a>
                 <a href="#section-sobremesas" class="nav-btn" onclick="setActive(this)">🍩 Doces</a>
                 <a href="#section-bebidas" class="nav-btn" onclick="setActive(this)">🥤 Bebidas</a>
+                <a href="admin.html" class="nav-btn">Admin</a>
             </nav>
         </div>
     </header>
@@ -222,9 +224,16 @@
         <span id="cart-total" class="font-black text-xl italic tracking-tighter">R$ 0,00</span>
     </div>
 
+    <a href="admin.html" class="fixed bottom-4 right-4 z-[160] bg-black/80 border border-orange-600/60 text-orange-500 w-11 h-11 rounded-full flex items-center justify-center shadow-2xl" title="Admin">
+        <i class="fas fa-user-lock text-sm"></i>
+    </a>
+
     <script>
         const WHATSAPP_NUMBER = "556492360895";
         const DELIVERY_FEE = 10.00;
+        const SUPABASE_URL = "https://oxwchuduvegkgubautit.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_StBXgUqUyPh-wiItDIR5hg_7fol45Yl";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cart = [];
         let currentItem = null;
 
@@ -241,7 +250,7 @@
             { name: "Molho Cheddar", price: 7.90 }
         ];
 
-        const menu = {
+        let menu = {
             combos: [
                 { name: "Barca", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca1.jpg", hasAddons: true, tag: "vendido" },
                 { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "chef" },
@@ -308,9 +317,10 @@
                             </h2>
                             <div class="grid gap-5">`;
                 menu[cat].forEach(p => {
+                    const itemName = String(p.name).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
                     let tagHtml = p.tag === 'vendido' ? `<span class="tag-badge bg-orange-600 text-white">🔥 Famoso</span>`
                         : p.tag === 'chef' ? `<span class="tag-badge bg-yellow-500 text-black">🌟 Chef</span>` : "";
-                    html += `<div class="glass-card flex p-3 gap-4" onclick="openModal('${p.name}', ${p.price}, ${p.hasAddons})">
+                    html += `<div class="glass-card flex p-3 gap-4" onclick="openModal('${itemName}', ${p.price}, ${p.hasAddons})">
                                 ${tagHtml}
                                 <div class="img-box" style="background-image: url('${p.img}')"></div>
                                 <div class="flex flex-col justify-center flex-grow">
@@ -322,6 +332,47 @@
                 });
                 container.innerHTML += html + `</div></section>`;
             });
+        }
+
+        function categoryKey(category) {
+            const normalized = String(category || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            if (normalized.includes('combo')) return 'combos';
+            if (normalized.includes('burger') || normalized.includes('hamb')) return 'burgers';
+            if (normalized.includes('porc') || normalized.includes('batata')) return 'porcoes';
+            if (normalized.includes('sobrem') || normalized.includes('doce')) return 'sobremesas';
+            if (normalized.includes('bebida') || normalized.includes('suco') || normalized.includes('agua')) return 'bebidas';
+            return normalized.replace(/[^a-z0-9]+/g, '-') || 'outros';
+        }
+
+        async function loadMenuFromSupabase() {
+            const { data, error } = await supabaseClient
+                .from('mnb_products')
+                .select('*')
+                .eq('available', true)
+                .order('sort_order', { ascending: true });
+
+            if (error) {
+                console.warn('Nao foi possivel carregar o cardapio do Supabase:', error.message);
+                render();
+                return;
+            }
+
+            const grouped = {};
+            data.forEach(product => {
+                const key = categoryKey(product.category);
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push({
+                    name: product.name,
+                    price: Number(product.price || 0),
+                    desc: product.description || '',
+                    img: product.image || '',
+                    hasAddons: Boolean(product.has_addons),
+                    tag: product.tag || ''
+                });
+            });
+
+            if (Object.keys(grouped).length) menu = grouped;
+            render();
         }
 
         function openModal(name, price, hasAddons) {
@@ -421,10 +472,11 @@
             el.classList.add('active');
         }
 
-        function sendToWhatsApp() {
+        async function sendToWhatsApp() {
             const name = document.getElementById('client-name').value;
             if (!name) return alert("Diga seu nome!");
             const type = document.getElementById('order-type').value;
+            const payment = document.getElementById('payment-method').value;
             let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n*Tipo:* ${type.toUpperCase()}\n\n`;
             let total = 0;
             cart.forEach(i => {
@@ -444,9 +496,41 @@
                 msg += `*Endereço:* ${addr}\n*Entrega:* R$ ${DELIVERY_FEE.toFixed(2)}\n`;
                 total += DELIVERY_FEE;
             }
-            msg += `*PAGAMENTO:* ${document.getElementById('payment-method').value}\n`;
+            msg += `*PAGAMENTO:* ${payment}\n`;
             msg += `*TOTAL: R$ ${total.toFixed(2)}*`;
+            await saveOrderToSupabase({ name, type, payment, total });
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+        }
+
+        async function saveOrderToSupabase({ name, type, payment, total }) {
+            const isEntrega = type === 'entrega';
+            const subtotal = cart.reduce((sum, item) => {
+                return sum + item.price + item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
+            }, 0);
+            const protocol = `MNB-${Date.now().toString().slice(-6)}`;
+            const customer = {
+                name,
+                type,
+                payment,
+                address: isEntrega ? document.getElementById('client-address').value : ''
+            };
+            const items = cart.map(item => ({
+                name: item.name,
+                price: item.price,
+                addons: item.addons,
+                obs: item.obs || ''
+            }));
+
+            const { error } = await supabaseClient.from('mnb_orders').insert({
+                protocol,
+                customer,
+                items,
+                subtotal,
+                delivery_fee: isEntrega ? DELIVERY_FEE : 0,
+                total
+            });
+
+            if (error) console.warn('Pedido nao foi salvo no Supabase:', error.message);
         }
 
         const tagStatus = document.getElementById('status-tag');
@@ -464,7 +548,7 @@
             tagStatus.innerText = "● FECHADO";
             tagStatus.classList.add("bg-red-500/20", "text-red-500");
         }
-        render();
+        loadMenuFromSupabase();
     </script>
 </body>
 </html>
