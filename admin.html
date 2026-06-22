@@ -83,13 +83,14 @@
                 <label class="block text-xs font-bold uppercase text-zinc-400">Nome</label>
                 <input id="product-name" required>
                 <label class="block text-xs font-bold uppercase text-zinc-400">Categoria</label>
-                <select id="product-category">
-                    <option>Combos</option>
-                    <option>Burgers</option>
-                    <option>Porcoes</option>
-                    <option>Sobremesas</option>
-                    <option>Bebidas</option>
-                </select>
+                <input id="product-category" list="category-options" placeholder="Ex: Combos, Burgers, Bebidas">
+                <datalist id="category-options">
+                    <option value="Combos"></option>
+                    <option value="Burgers"></option>
+                    <option value="Porcoes"></option>
+                    <option value="Sobremesas"></option>
+                    <option value="Bebidas"></option>
+                </datalist>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold uppercase text-zinc-400">Preco</label>
@@ -102,6 +103,11 @@
                 </div>
                 <label class="block text-xs font-bold uppercase text-zinc-400">Imagem</label>
                 <input id="product-image" placeholder="ex: brasa.jpg ou URL">
+                <div class="grid grid-cols-[1fr_auto] gap-2 items-center">
+                    <input id="product-photo" type="file" accept="image/*">
+                    <button type="button" class="btn bg-white/10 hover:bg-white/15" onclick="uploadProductPhoto()">Enviar</button>
+                </div>
+                <p class="text-xs text-zinc-500">No celular, toque em escolher arquivo para pegar uma foto da galeria ou camera.</p>
                 <label class="block text-xs font-bold uppercase text-zinc-400">Descricao</label>
                 <textarea id="product-description" rows="4"></textarea>
                 <div class="grid grid-cols-2 gap-3">
@@ -140,6 +146,7 @@
     <script>
         const SUPABASE_URL = "https://oxwchuduvegkgubautit.supabase.co";
         const SUPABASE_KEY = "sb_publishable_StBXgUqUyPh-wiItDIR5hg_7fol45Yl";
+        const PRODUCT_IMAGES_BUCKET = "mnb-images";
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let products = [];
 
@@ -197,7 +204,17 @@
                 return;
             }
             products = data;
+            updateCategoryOptions();
             renderProducts();
+        }
+
+        function updateCategoryOptions() {
+            const categories = [...new Set(products.map(product => product.category).filter(Boolean))].sort();
+            const defaults = ['Combos', 'Burgers', 'Porcoes', 'Sobremesas', 'Bebidas'];
+            const options = [...new Set([...defaults, ...categories])];
+            document.getElementById('category-options').innerHTML = options
+                .map(category => `<option value="${category}"></option>`)
+                .join('');
         }
 
         function renderProducts() {
@@ -245,7 +262,7 @@
             const product = {
                 id,
                 name,
-                category: document.getElementById('product-category').value,
+                category: document.getElementById('product-category').value.trim() || 'Outros',
                 price: Number(document.getElementById('product-price').value || 0),
                 sort_order: Number(document.getElementById('product-order').value || 0),
                 image: document.getElementById('product-image').value.trim(),
@@ -260,6 +277,33 @@
             setFormMessage('Produto salvo.');
             await loadProducts();
             editProduct(id);
+        }
+
+        async function uploadProductPhoto() {
+            const fileInput = document.getElementById('product-photo');
+            const file = fileInput.files && fileInput.files[0];
+            if (!file) return setFormMessage('Escolha uma foto primeiro.');
+            if (!file.type.startsWith('image/')) return setFormMessage('Escolha um arquivo de imagem.');
+
+            setFormMessage('Enviando foto...');
+            const productName = document.getElementById('product-name').value.trim() || 'produto';
+            const ext = file.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+            const filePath = `products/${slugify(productName)}-${Date.now()}.${ext}`;
+            const { error } = await supabaseClient.storage
+                .from(PRODUCT_IMAGES_BUCKET)
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+
+            if (error) return setFormMessage(error.message);
+
+            const { data } = supabaseClient.storage
+                .from(PRODUCT_IMAGES_BUCKET)
+                .getPublicUrl(filePath);
+
+            document.getElementById('product-image').value = data.publicUrl;
+            setFormMessage('Foto enviada. Salve o produto para aplicar.');
         }
 
         async function deleteProduct() {

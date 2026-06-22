@@ -138,6 +138,48 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
+        .tutorial-step {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .tutorial-step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 14px;
+            background: rgba(234, 88, 12, 0.16);
+            border: 1px solid rgba(234, 88, 12, 0.32);
+            color: #fb923c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .hero-banner {
+            width: 100%;
+            background: #050505;
+            border-bottom: 1px solid rgba(234, 88, 12, 0.28);
+            overflow: hidden;
+        }
+
+        .hero-banner img {
+            display: block;
+            width: 100%;
+            height: clamp(170px, 34vw, 420px);
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .hero-banner.logo-fallback img {
+            height: clamp(180px, 42vw, 320px);
+            object-fit: contain;
+            padding: 18px;
+            background: radial-gradient(circle at center, rgba(234, 88, 12, 0.18), #050505 62%);
+        }
     </style>
 </head>
 
@@ -162,11 +204,15 @@
         🍔 PEÇA JÁ O SEU ARTESANAL FAVORITO!
     </div>
 
+    <section class="hero-banner">
+        <img src="maonabrasa-banner.jpg" alt="Mao na Brasa - burgers artesanais feitos na brasa" onerror="this.onerror=null; this.parentElement.classList.add('logo-fallback'); this.src='maonabrasa.jpg';">
+    </section>
+
     <header class="sticky top-[30px] z-[100] bg-black/80 backdrop-blur-2xl border-b border-white/10 p-4">
         <div class="max-w-3xl mx-auto text-center">
             <h1 class="font-title text-xl tracking-tighter uppercase mb-2">Mão na <span class="text-orange-600">Brasa</span></h1>
             <div id="status-tag" class="inline-block px-4 py-1 rounded-full text-[9px] font-black uppercase italic mb-4">Verificando...</div>
-            <nav class="flex gap-2 overflow-x-auto no-scrollbar">
+            <nav id="category-nav" class="flex gap-2 overflow-x-auto no-scrollbar">
                 <a href="#section-combos" class="nav-btn active" onclick="setActive(this)">🔥 Combos</a>
                 <a href="#section-burgers" class="nav-btn" onclick="setActive(this)">🍔 Burgers</a>
                 <a href="#section-porcoes" class="nav-btn" onclick="setActive(this)">🍟 Porções</a>
@@ -180,6 +226,50 @@
     <main class="max-w-3xl mx-auto p-4 pb-40">
         <div id="menu-container"></div>
     </main>
+
+    <div id="tutorial-modal" class="fixed inset-0 bg-black/95 z-[180] hidden items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-[#0a0a0a] border border-orange-600/30 w-full max-w-sm rounded-[32px] p-7 shadow-2xl">
+            <div class="text-center mb-6">
+                <div class="mb-4 inline-flex w-14 h-14 rounded-2xl bg-orange-600/15 border border-orange-600/30 items-center justify-center">
+                    <i class="fas fa-burger text-orange-500 text-2xl"></i>
+                </div>
+                <h3 class="font-title text-lg uppercase italic tracking-tighter">Como pedir</h3>
+                <p class="text-zinc-400 text-xs mt-2">Um guia rapido para montar seu pedido sem erro.</p>
+            </div>
+            <div class="space-y-4">
+                <div class="tutorial-step">
+                    <span class="tutorial-step-icon"><i class="fas fa-list"></i></span>
+                    <div>
+                        <p class="font-black uppercase text-xs">Escolha a categoria</p>
+                        <p class="text-zinc-400 text-[11px] leading-relaxed">Use as abas do topo para navegar pelo cardapio.</p>
+                    </div>
+                </div>
+                <div class="tutorial-step">
+                    <span class="tutorial-step-icon"><i class="fas fa-circle-plus"></i></span>
+                    <div>
+                        <p class="font-black uppercase text-xs">Toque no item</p>
+                        <p class="text-zinc-400 text-[11px] leading-relaxed">Adicione extras e observacoes quando aparecer a janela do produto.</p>
+                    </div>
+                </div>
+                <div class="tutorial-step">
+                    <span class="tutorial-step-icon"><i class="fas fa-cart-shopping"></i></span>
+                    <div>
+                        <p class="font-black uppercase text-xs">Confira o carrinho</p>
+                        <p class="text-zinc-400 text-[11px] leading-relaxed">Revise os itens, escolha entrega ou retirada e informe seus dados.</p>
+                    </div>
+                </div>
+                <div class="tutorial-step">
+                    <span class="tutorial-step-icon"><i class="fab fa-whatsapp"></i></span>
+                    <div>
+                        <p class="font-black uppercase text-xs">Finalize no WhatsApp</p>
+                        <p class="text-zinc-400 text-[11px] leading-relaxed">O pedido vai pronto para a conversa com a hamburgueria.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="finishTutorial()" class="cta-button mt-7">Entendi, bora pedir</button>
+            <button onclick="finishTutorial()" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Pular tutorial</button>
+        </div>
+    </div>
 
     <div id="modal-item" class="fixed inset-0 bg-black/95 z-[200] hidden items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[40px] p-8">
@@ -250,9 +340,10 @@
             { name: "Molho Cheddar", price: 7.90 }
         ];
 
+        let menuLabels = {};
         let menu = {
             combos: [
-                { name: "Barca", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca1.jpg", hasAddons: true, tag: "vendido" },
+                { name: "Barca", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca1 (1).jpg", hasAddons: true, tag: "vendido" },
                 { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "chef" },
                 { name: "Brasa Duplo", price: 91.90, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 Coca-Cola 350ml", img: "barca.jpg", hasAddons: true, tag: "vendido" }
             ],
@@ -263,10 +354,10 @@
                 { name: "Frango Crispy", price: 39.90, desc: "Frando empanado, queijo mussarela empanado, bacon e catupiry.", img: "crispy.jpg", hasAddons: true, tag: "vendido" },
                 { name: "Costela Prime", price: 44.90, desc: "Blend, costela desfiada e cream cheese maçaricado.", img: "costela.jpg", hasAddons: true, tag: "" },
                 { name: "Piscina de Cheddar", price: 37.99, desc: "Burger com bacon dentro de piscina de cheddar.", img: "piscina.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Bacon Burguer Duplo", price: 42.90, desc: "Dois blends, duas camadas de bacon e molho.", img: "duplo.jpg", hasAddons: true, tag: "" },
+                { name: "Bacon Burguer Duplo", price: 42.90, desc: "Dois blends, duas camadas de bacon e molho.", img: "duplo (1).jpg", hasAddons: true, tag: "" },
                 { name: "Bacon Burguer", price: 33.90, desc: "Blend, bacon crocante e queijo prato.", img: "bacon.jpg", hasAddons: true, tag: "" },
                 { name: "Bacon Burguer Triplo", price: 49.90, desc: "Três blends, três bacon e cebola caramelizada.", img: "triplobacon.jpg", hasAddons: true, tag: "" },
-                { name: "Cheese Burger", price: 29.90, desc: "Blend suculento, cheddar duplo e bacon.", img: "chesse.jpg", hasAddons: true, tag: "" },
+                { name: "Cheese Burger", price: 29.90, desc: "Blend suculento, cheddar duplo e bacon.", img: "chesse (1).jpg", hasAddons: true, tag: "" },
                 { name: "Classic Burguer Salada", price: 29.90, desc: "Blend, queijo prato, salada e maionese.", img: "salada.jpg", hasAddons: true, tag: "" },
                 { name: "Classic Burguer Bacon Caramelizado", price: 34.90, desc: "Blend 160g, bacon, queijo e salada.", img: "bacon caramelizado.jpg", hasAddons: true, tag: "" },
                 { name: "Classic Burguer Salada Especial", price: 34.90, desc: "Blend 160g, bacon, queijo e salada.", img: "saladaespecial.jpg", hasAddons: true, tag: "" },
@@ -275,7 +366,7 @@
             porcoes: [
                 { name: "Batata Frita Especial 250g", price: 19.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata250.jpg", hasAddons: false, tag: "" },
                 { name: "Batata Frita Especial 500g", price: 34.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata500.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Anéis de Cebola", price: 19.90, desc: "Crocantes.", img: "onion.jpg", hasAddons: false, tag: "" },
+                { name: "Anéis de Cebola", price: 19.90, desc: "Crocantes.", img: "onion (1).jpg", hasAddons: false, tag: "" },
                                 { name: "Batata Especial de Strogonoff", price: 27.90, desc: "Batata, strogonoff e catupiry.", img: "bstrogonoff.jpg", hasAddons: false, tag: "" },
                 { name: "Batata Especial de Costela", price: 27.90, desc: "Batata, costela e catupiry.", img: "bcostela.jpg", hasAddons: false, tag: "chef" },
                 { name: "Batata Especial de Calabresa", price: 27.90, desc: "Batata, calabresa, bacon, mussarela.", img: "bmussarela.jpg", hasAddons: false, tag: "" },
@@ -285,7 +376,7 @@
                 { name: "Brigadeiro Sortido", price: 16.00, desc: "Caixa com 4.", img: "brigadeiro.jpg", hasAddons: false, tag: "" },
                 { name: "Brownie com Sorvete", price: 22.00, desc: "Sorvete e Ganache.", img: "Brawnie com Sorvete.jpg", hasAddons: false, tag: "chef" },
                 { name: "Pizza de Brownie", price: 27.00, desc: "Ninho e Nutella.", img: "Browniepizza.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado.", img: "pudim.jpg", hasAddons: false, tag: "" }
+                { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado.", img: "pudim (1).jpg", hasAddons: false, tag: "" }
             ],
             bebidas: [
                 { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg", hasAddons: false },
@@ -305,15 +396,27 @@
         function closeWelcome() {
             document.getElementById('welcome-overlay').style.display = 'none';
             document.body.style.overflow = 'auto';
+            showTutorialOnce();
+        }
+
+        function showTutorialOnce() {
+            if (localStorage.getItem('mnb_tutorial_seen') === 'yes') return;
+            document.getElementById('tutorial-modal').style.display = 'flex';
+        }
+
+        function finishTutorial() {
+            localStorage.setItem('mnb_tutorial_seen', 'yes');
+            document.getElementById('tutorial-modal').style.display = 'none';
         }
 
         function render() {
             const container = document.getElementById('menu-container');
             container.innerHTML = "";
+            renderCategoryNav();
             Object.keys(menu).forEach(cat => {
                 let html = `<section id="section-${cat}" class="mb-10">
                             <h2 class="text-orange-500 font-title text-[10px] mb-6 tracking-[0.4em] uppercase flex items-center gap-3">
-                                <span class="w-10 h-[1px] bg-orange-600"></span> ${cat}
+                                <span class="w-10 h-[1px] bg-orange-600"></span> ${menuLabels[cat] || cat}
                             </h2>
                             <div class="grid gap-5">`;
                 menu[cat].forEach(p => {
@@ -332,6 +435,22 @@
                 });
                 container.innerHTML += html + `</div></section>`;
             });
+        }
+
+        function renderCategoryNav() {
+            const nav = document.getElementById('category-nav');
+            const icons = {
+                combos: 'ðŸ”¥',
+                burgers: 'ðŸ”',
+                porcoes: 'ðŸŸ',
+                sobremesas: 'ðŸ©',
+                bebidas: 'ðŸ¥¤'
+            };
+            const links = Object.keys(menu).map((cat, index) => {
+                const active = index === 0 ? ' active' : '';
+                return `<a href="#section-${cat}" class="nav-btn${active}" onclick="setActive(this)">${icons[cat] || '+'} ${menuLabels[cat] || cat}</a>`;
+            }).join('');
+            nav.innerHTML = links + `<a href="admin.html" class="nav-btn">Admin</a>`;
         }
 
         function categoryKey(category) {
@@ -358,9 +477,11 @@
             }
 
             const grouped = {};
+            menuLabels = {};
             data.forEach(product => {
                 const key = categoryKey(product.category);
                 if (!grouped[key]) grouped[key] = [];
+                menuLabels[key] = product.category || key;
                 grouped[key].push({
                     name: product.name,
                     price: Number(product.price || 0),
