@@ -2,66 +2,11 @@ const CONFIG = {
   whatsappNumber: "556492360895",
   businessName: "Mao na Brasa",
   deliveryFee: 10,
-  supabaseUrl: "https://hpjvlayhinbtpgmlocaw.supabase.co",
-  supabaseKey: "sb_publishable_FV32W6qp4Jfi05CQp2CUCQ_Hz_GIqQQ"
+  supabaseUrl: "https://oxwchuduvegkgubautit.supabase.co",
+  supabaseKey: "sb_publishable_StBXgUqUyPh-wiItDIR5hg_7fol45Yl"
 };
 
 const supabaseClient = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
-
-// Cardápio-base. Os registros existentes no Supabase com o mesmo nome prevalecem,
-// permitindo editar preços, fotos e disponibilidade normalmente pelo painel admin.
-const CATALOG_PRODUCTS = [
-  ["Barca",79.90,"2 hambúrgueres + batata com bacon e cheddar","barca1 (1).jpg",true,"vendido","Combos"],
-  ["Combo Individual",49.90,"Classic Salada + batata frita + bacon + queijo prato","combo.jpg",true,"chef","Combos"],
-  ["Brasa Duplo",91.90,"2 hambúrgueres + batata com bacon e cheddar + 2 Coca-Cola 350 ml","barca.jpg",true,"vendido","Combos"],
-  ["Na Brasa",45.90,"Blend bovino de 160 g, bacon, queijo muçarela, abacaxi selado no mel, queijo coalho, alface, tomate e cebola roxa.","brasa.jpg",true,"chef","Hambúrgueres"],
-  ["Salada Duplo",42.90,"Dois blends, dobro de queijo, três porções de bacon e ovo.","prime.jpg",true,"chef","Hambúrgueres"],
-  ["Cheese Burger Duplo",38.90,"Dois blends, dose tripla de cheddar e bacon.","Cheese Burger Duplo.jpg",true,"vendido","Hambúrgueres"],
-  ["Frango Crispy",39.90,"Frango empanado, queijo muçarela empanado, bacon e Catupiry.","crispy.jpg",true,"vendido","Hambúrgueres"],
-  ["Costela Prime",44.90,"Blend, costela desfiada e cream cheese maçaricado.","costela.jpg",true,"","Hambúrgueres"],
-  ["Piscina de Cheddar",37.99,"Burger com bacon mergulhado em uma piscina de cheddar.","piscina.jpg",true,"vendido","Hambúrgueres"],
-  ["Bacon Burguer Duplo",42.90,"Dois blends, duas camadas de bacon e molho.","duplo (1).jpg",true,"","Hambúrgueres"],
-  ["Bacon Burguer",33.90,"Blend, bacon crocante e queijo prato.","bacon.jpg",true,"","Hambúrgueres"],
-  ["Bacon Burguer Triplo",49.90,"Três blends, três porções de bacon e cebola caramelizada.","triplobacon.jpg",true,"","Hambúrgueres"],
-  ["Cheese Burger",29.90,"Blend suculento, cheddar duplo e bacon.","chesse (1).jpg",true,"","Hambúrgueres"],
-  ["Classic Burguer Salada",29.90,"Blend, queijo prato, salada e maionese.","salada.jpg",true,"","Hambúrgueres"],
-  ["Classic Burguer Bacon Caramelizado",34.90,"Blend de 160 g, bacon, queijo e salada.","bacon caramelizado.jpg",true,"","Hambúrgueres"],
-  ["Classic Burguer Salada Especial",34.90,"Blend de 160 g, bacon, queijo e salada.","saladaespecial.jpg",true,"","Hambúrgueres"],
-  ["Classic Burguer X-Tudo",34.99,"Blend de 160 g, bacon, queijo, ovo, salsicha, alface, tomate, cebola e abacaxi.","xtudo.jpg",true,"","Hambúrgueres"],
-  ["Batata Frita Especial 250 g",19.90,"Cheddar ou queijo e bacon.","batata250.jpg",false,"","Porções"],
-  ["Batata Frita Especial 500 g",34.90,"Cheddar ou queijo e bacon.","batata500.jpg",false,"vendido","Porções"],
-  ["Anéis de Cebola",19.90,"Crocantes.","onion (1).jpg",false,"","Porções"],
-  ["Batata Especial de Strogonoff",27.90,"Batata, strogonoff e Catupiry.","bstrogonoff.jpg",false,"","Porções"],
-  ["Batata Especial de Costela",27.90,"Batata, costela e Catupiry.","bcostela.jpg",false,"chef","Porções"],
-  ["Batata Especial de Calabresa",27.90,"Batata, calabresa, bacon e muçarela.","bmussarela.jpg",false,"","Porções"],
-  ["Batata Especial de Carne",27.90,"Batata, strogonoff de carne e Catupiry.","bcarne.jpg",false,"","Porções"],
-  ["Brigadeiro Sortido",16.00,"Caixa com 4 unidades.","brigadeiro.jpg",false,"","Sobremesas"],
-  ["Brownie com Sorvete",22.00,"Sorvete e ganache.","Brawnie com Sorvete.jpg",false,"chef","Sobremesas"],
-  ["Pizza de Brownie",27.00,"Leite Ninho e Nutella.","Browniepizza.jpg",false,"vendido","Sobremesas"],
-  ["Pudim Cremoso",12.00,"Leite condensado.","pudim (1).jpg",false,"","Sobremesas"],
-  ["Coca-Cola 1,5 L",13.00,"Garrafa gelada.","coca2l.jpg",false,"","Bebidas"],
-  ["Guaraná Mineiro 1,5 L",13.00,"Garrafa gelada.","Guarana.jpg",false,"","Bebidas"],
-  ["Coca-Cola Lata",6.00,"350 ml, gelada.","coca350.jpg",false,"","Bebidas"],
-  ["Coca-Cola Zero Lata",6.00,"350 ml, gelada.","cocazero350.jpg",false,"","Bebidas"],
-  ["Guaraná Mineiro Lata",6.00,"350 ml, gelada.","guaranaM350.jpg",false,"","Bebidas"],
-  ["Suco de Laranja",12.00,"400 ml, natural.","sucodelaranja.jpg",false,"","Bebidas"],
-  ["Suco de Acerola",12.00,"400 ml, natural.","acelora.jpg",false,"","Bebidas"],
-  ["Suco Detox",12.00,"Couve, gengibre, abacaxi, cenoura e hortelã. 400 ml, natural.","detox.jpg",false,"","Bebidas"],
-  ["Suco de Abacaxi com Hortelã",10.00,"400 ml, natural.","abacaxi.jpg",false,"","Bebidas"],
-  ["Água com Gás",5.00,"500 ml.","aguag.jpg",false,"","Bebidas"],
-  ["Água sem Gás",4.00,"500 ml.","agua.jpg",false,"","Bebidas"]
-].map((item, index) => ({
-  id: `catalog-${index + 1}`, name: item[0], price: item[1], description: item[2],
-  image: item[3], hasAddons: item[4], tag: item[5] || "Na brasa", category: item[6],
-  imageFit: "cover", imagePosition: "center"
-}));
-
-const CATALOG_ADDONS = [
-  ["Carne Extra",7.90], ["Bacon Extra",5.90], ["Queijo Extra",3.90],
-  ["Salada Extra",0.90], ["Cebola Extra",0.90], ["Molho Extra",0.90],
-  ["Queijo Empanado",8.90], ["Frango Empanado",9.90],
-  ["Queijo Cheddar",5.90], ["Molho Cheddar",7.90]
-].map((item, index) => ({ id: `catalog-addon-${index + 1}`, name: item[0], price: item[1] }));
 
 const DEFAULT_SETTINGS = {
   businessName: "Mao na Brasa",
@@ -223,7 +168,12 @@ async function loadProducts() {
     .eq("available", true)
     .order("sort_order", { ascending: true });
 
-  const remoteProducts = error ? [] : data.map(product => ({
+  if (error) {
+    $("#menuGrid").innerHTML = `<p class="empty">Nao foi possivel carregar o cardapio agora.</p>`;
+    return;
+  }
+
+  products = data.map(product => ({
     id: product.id,
     name: product.name,
     category: product.category || "Outros",
@@ -235,13 +185,6 @@ async function loadProducts() {
     imagePosition: product.image_position || "center",
     hasAddons: Boolean(product.has_addons)
   }));
-
-  // O banco prevalece quando já existe um produto com o mesmo nome.
-  const remoteNames = new Set(remoteProducts.map(product => product.name.toLocaleLowerCase("pt-BR")));
-  products = [
-    ...remoteProducts,
-    ...CATALOG_PRODUCTS.filter(product => !remoteNames.has(product.name.toLocaleLowerCase("pt-BR")))
-  ];
 
   cart = cart
     .filter(item => products.some(product => product.id === item.id))
@@ -266,16 +209,13 @@ async function loadAddons() {
     .eq("available", true)
     .order("sort_order", { ascending: true });
 
-  const remoteAddons = !error && data ? data.map(addon => ({
+  if (!error && data) {
+    addons = data.map(addon => ({
       id: addon.id,
       name: addon.name,
       price: Number(addon.price || 0)
-    })) : [];
-  const remoteNames = new Set(remoteAddons.map(addon => addon.name.toLocaleLowerCase("pt-BR")));
-  addons = [
-    ...remoteAddons,
-    ...CATALOG_ADDONS.filter(addon => !remoteNames.has(addon.name.toLocaleLowerCase("pt-BR")))
-  ];
+    }));
+  }
 }
 
 function renderCategories() {
