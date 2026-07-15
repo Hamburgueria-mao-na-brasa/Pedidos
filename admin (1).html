@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mao na Brasa | Admin</title>
+    <meta name="theme-color" content="#ea580c">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: #050505;
+            color: #fff;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        input,
+        textarea,
+        select {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            padding: 12px 14px;
+            width: 100%;
+        }
+
+        option {
+            color: #111;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 18px;
+        }
+
+        .btn {
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .06em;
+            padding: 12px 16px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="max-w-6xl mx-auto p-4 md:p-6">
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+                <p class="text-orange-500 text-xs uppercase font-black tracking-[0.25em]">Painel</p>
+                <h1 class="text-2xl md:text-3xl font-black uppercase italic">Mao na Brasa</h1>
+            </div>
+            <div class="flex gap-2">
+                <a href="index.html" class="btn bg-white/10 hover:bg-white/15">Ver site</a>
+                <button id="logout-btn" class="btn bg-red-600 hover:bg-red-500 hidden" onclick="logout()">Sair</button>
+            </div>
+        </header>
+
+        <section id="login-card" class="panel p-5 max-w-md">
+            <h2 class="font-black uppercase mb-4">Entrar como admin</h2>
+            <div class="space-y-3">
+                <input id="email" type="email" placeholder="Email do admin" value="williancarlos0103@gmail.com">
+                <input id="password" type="password" placeholder="Senha">
+                <button class="btn bg-orange-600 hover:bg-orange-500 w-full" onclick="login()">Entrar</button>
+                <p class="text-xs text-zinc-500">Acesso restrito a administradores cadastrados.</p>
+                <p id="login-message" class="text-sm text-zinc-400"></p>
+            </div>
+        </section>
+
+        <section id="admin-card" class="hidden grid lg:grid-cols-[380px_1fr] gap-5">
+            <form id="product-form" class="panel p-5 space-y-3" onsubmit="saveProduct(event)">
+                <div class="flex items-center justify-between gap-3">
+                    <h2 class="font-black uppercase">Produto</h2>
+                    <button type="button" class="btn bg-white/10 hover:bg-white/15" onclick="newProduct()">Novo</button>
+                </div>
+                <input id="product-id" type="hidden">
+                <label class="block text-xs font-bold uppercase text-zinc-400">Nome</label>
+                <input id="product-name" required>
+                <label class="block text-xs font-bold uppercase text-zinc-400">Categoria</label>
+                <select id="product-category">
+                    <option>Combos</option>
+                    <option>Burgers</option>
+                    <option>Porcoes</option>
+                    <option>Sobremesas</option>
+                    <option>Bebidas</option>
+                </select>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400">Preco</label>
+                        <input id="product-price" type="number" step="0.01" min="0" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-zinc-400">Ordem</label>
+                        <input id="product-order" type="number" step="1" min="0">
+                    </div>
+                </div>
+                <label class="block text-xs font-bold uppercase text-zinc-400">Imagem</label>
+                <input id="product-image" placeholder="ex: brasa.jpg ou URL">
+                <label class="block text-xs font-bold uppercase text-zinc-400">Descricao</label>
+                <textarea id="product-description" rows="4"></textarea>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input id="product-addons" type="checkbox" class="w-auto">
+                        Extras
+                    </label>
+                    <label class="flex items-center gap-2 text-sm">
+                        <input id="product-available" type="checkbox" class="w-auto" checked>
+                        Disponivel
+                    </label>
+                </div>
+                <label class="block text-xs font-bold uppercase text-zinc-400">Selo</label>
+                <select id="product-tag">
+                    <option value="">Sem selo</option>
+                    <option value="vendido">Famoso</option>
+                    <option value="chef">Chef</option>
+                </select>
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button type="submit" class="btn bg-orange-600 hover:bg-orange-500">Salvar</button>
+                    <button type="button" class="btn bg-red-600 hover:bg-red-500" onclick="deleteProduct()">Excluir</button>
+                </div>
+                <p id="form-message" class="text-sm text-zinc-400"></p>
+            </form>
+
+            <div class="panel p-5">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+                    <h2 class="font-black uppercase">Cardapio</h2>
+                    <input id="search" placeholder="Buscar produto" oninput="renderProducts()">
+                </div>
+                <div id="products-list" class="grid gap-3"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const SUPABASE_URL = "https://oxwchuduvegkgubautit.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_StBXgUqUyPh-wiItDIR5hg_7fol45Yl";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let products = [];
+
+        function slugify(value) {
+            return String(value || 'produto')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '') || `produto-${Date.now()}`;
+        }
+
+        async function init() {
+            const { data } = await supabaseClient.auth.getSession();
+            if (data.session) await showAdmin();
+        }
+
+        async function login() {
+            setLoginMessage('Entrando...');
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) return setLoginMessage(error.message);
+            await showAdmin();
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            location.reload();
+        }
+
+        function setLoginMessage(message) {
+            document.getElementById('login-message').innerText = message;
+        }
+
+        async function showAdmin() {
+            const { data, error } = await supabaseClient.from('mnb_admin_profiles').select('email').limit(1);
+            if (error || !data.length) {
+                await supabaseClient.auth.signOut();
+                return setLoginMessage('Este email nao esta liberado como admin.');
+            }
+            document.getElementById('login-card').classList.add('hidden');
+            document.getElementById('admin-card').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+            await loadProducts();
+        }
+
+        async function loadProducts() {
+            const { data, error } = await supabaseClient
+                .from('mnb_products')
+                .select('*')
+                .order('sort_order', { ascending: true });
+            if (error) {
+                document.getElementById('products-list').innerHTML = `<p class="text-red-400">${error.message}</p>`;
+                return;
+            }
+            products = data;
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const term = document.getElementById('search').value.toLowerCase();
+            const visible = products.filter(product => product.name.toLowerCase().includes(term));
+            document.getElementById('products-list').innerHTML = visible.map(product => `
+                <button class="text-left bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl p-3 flex items-center gap-3" onclick="editProduct('${product.id}')">
+                    <div class="w-16 h-16 rounded-xl bg-zinc-900 bg-cover bg-center shrink-0" style="background-image:url('${product.image}')"></div>
+                    <div class="min-w-0 flex-1">
+                        <div class="font-black uppercase text-sm truncate">${product.name}</div>
+                        <div class="text-xs text-zinc-400">${product.category} - R$ ${Number(product.price).toFixed(2)}</div>
+                    </div>
+                    <span class="text-[10px] font-black uppercase ${product.available ? 'text-green-400' : 'text-red-400'}">${product.available ? 'Ativo' : 'Oculto'}</span>
+                </button>
+            `).join('');
+        }
+
+        function editProduct(id) {
+            const product = products.find(item => item.id === id);
+            if (!product) return;
+            document.getElementById('product-id').value = product.id;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-category').value = product.category;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-order').value = product.sort_order || 0;
+            document.getElementById('product-image').value = product.image || '';
+            document.getElementById('product-description').value = product.description || '';
+            document.getElementById('product-addons').checked = product.has_addons;
+            document.getElementById('product-available').checked = product.available;
+            document.getElementById('product-tag').value = product.tag || '';
+            setFormMessage('');
+        }
+
+        function newProduct() {
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('product-available').checked = true;
+            setFormMessage('');
+        }
+
+        async function saveProduct(event) {
+            event.preventDefault();
+            const name = document.getElementById('product-name').value.trim();
+            const id = document.getElementById('product-id').value || slugify(name);
+            const product = {
+                id,
+                name,
+                category: document.getElementById('product-category').value,
+                price: Number(document.getElementById('product-price').value || 0),
+                sort_order: Number(document.getElementById('product-order').value || 0),
+                image: document.getElementById('product-image').value.trim(),
+                description: document.getElementById('product-description').value.trim(),
+                has_addons: document.getElementById('product-addons').checked,
+                available: document.getElementById('product-available').checked,
+                tag: document.getElementById('product-tag').value,
+                updated_at: new Date().toISOString()
+            };
+            const { error } = await supabaseClient.from('mnb_products').upsert(product);
+            if (error) return setFormMessage(error.message);
+            setFormMessage('Produto salvo.');
+            await loadProducts();
+            editProduct(id);
+        }
+
+        async function deleteProduct() {
+            const id = document.getElementById('product-id').value;
+            if (!id) return setFormMessage('Escolha um produto primeiro.');
+            if (!confirm('Excluir este produto?')) return;
+            const { error } = await supabaseClient.from('mnb_products').delete().eq('id', id);
+            if (error) return setFormMessage(error.message);
+            setFormMessage('Produto excluido.');
+            newProduct();
+            await loadProducts();
+        }
+
+        function setFormMessage(message) {
+            document.getElementById('form-message').innerText = message;
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
