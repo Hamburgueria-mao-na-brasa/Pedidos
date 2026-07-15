@@ -1,0 +1,20 @@
+COMO CONFIGURAR O SUPABASE - MÃO NA BRASA
+
+1. Entre em https://supabase.com/dashboard
+2. Abra o projeto hpjvlayhinbtpgmlocaw.
+3. Abra SQL Editor > New query.
+4. Copie todo o conteúdo de supabase-setup-completo.sql.
+5. Cole no editor e clique em Run.
+6. Abra Authentication > Users e crie o usuário:
+   E-mail: williancarlos0103@gmail.com
+   Use uma senha forte escolhida por você.
+7. Se o usuário foi criado depois de executar o SQL, execute novamente somente
+   o último bloco "insert into public.mnb_admin_profiles" do arquivo SQL.
+8. Suba os arquivos index.html, script.js e admin.html no GitHub.
+9. Entre no admin. No primeiro acesso, os produtos que faltarem serão enviados
+   automaticamente ao Supabase e aparecerão na lista do painel.
+
+IMPORTANTE
+- Não coloque chave secret ou service_role nos arquivos públicos.
+- A chave sb_publishable usada no site é pública e foi feita para o navegador.
+- As imagens locais precisam estar na mesma pasta do site com os nomes corretos.

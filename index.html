@@ -1,676 +1,220 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mão na Brasa | Cardápio Digital</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ff4b00" />
+  <meta name="description" content="Mao na Brasa - burgers artesanais feitos na brasa. Monte seu pedido e envie pelo WhatsApp." />
+  <title>Mao na Brasa | Burgers Artesanais</title>
 
-    <meta name="theme-color" content="#ea580c">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="maonabrasa.png.jpg">
-    <link rel="apple-touch-icon" href="maonabrasa.png.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Syncopate:wght@700&display=swap');
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 240px;
-        }
-
-        body {
-            background-color: #050505;
-            color: #fff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .bg-fixed-body {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(rgba(0, 0, 0, 0.88), rgba(5, 5, 5, 0.98)),
-                url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            z-index: -2;
-        }
-
-        .font-title {
-            font-family: 'Syncopate', sans-serif;
-        }
-
-        /* CARTÃO DE BOAS-VINDAS */
-        #welcome-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(20px);
-            z-index: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .welcome-card {
-            background: linear-gradient(145deg, #262626, #000000);
-            border-radius: 40px;
-            padding: 50px 30px;
-            max-width: 400px;
-            width: 92%;
-            text-align: center;
-            border: 1px solid rgba(234, 88, 12, 0.3);
-            box-shadow: 0 0 50px rgba(234, 88, 12, 0.2);
-        }
-
-        .cta-button {
-            background: linear-gradient(90deg, #ea580c, #f97316);
-            color: white;
-            font-weight: 900;
-            text-transform: uppercase;
-            padding: 20px;
-            border-radius: 20px;
-            font-size: 13px;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.4);
-            width: 100%;
-            transition: all 0.3s;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            position: relative;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .img-box {
-            width: 105px;
-            height: 105px;
-            border-radius: 20px;
-            background-size: cover;
-            background-position: center;
-            flex-shrink: 0;
-            background-color: #1a1a1a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-btn {
-            white-space: nowrap;
-            padding: 12px 24px;
-            border-radius: 16px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: #71717a;
-            font-weight: 800;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-
-        .nav-btn.active {
-            background: #ea580c;
-            color: white;
-            border-color: #ea580c;
-        }
-
-        .tag-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 9px;
-            font-weight: 900;
-            text-transform: uppercase;
-            z-index: 10;
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tutorial-step {
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-            text-align: left;
-        }
-
-        .tutorial-step-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 14px;
-            background: rgba(234, 88, 12, 0.16);
-            border: 1px solid rgba(234, 88, 12, 0.32);
-            color: #fb923c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .hero-banner {
-            width: 100%;
-            background: #050505;
-            border-bottom: 1px solid rgba(234, 88, 12, 0.28);
-            overflow: hidden;
-        }
-
-        .hero-banner img {
-            display: block;
-            width: 100%;
-            height: clamp(170px, 34vw, 420px);
-            object-fit: cover;
-            object-position: center;
-        }
-
-        .hero-banner.logo-fallback img {
-            height: clamp(180px, 42vw, 320px);
-            object-fit: contain;
-            padding: 18px;
-            background: radial-gradient(circle at center, rgba(234, 88, 12, 0.18), #050505 62%);
-        }
-    </style>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="mao-na-brasa-icon.png" />
+  <link rel="apple-touch-icon" href="mao-na-brasa-apple-touch.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-    <div class="bg-fixed-body"></div>
+  <div class="site-bg" aria-hidden="true"></div>
+  <div class="embers" aria-hidden="true"></div>
 
-    <div id="welcome-overlay">
-        <div class="welcome-card animate__animated animate__fadeInUp">
-            <div class="mb-6 inline-block p-4 rounded-full bg-orange-600/10 border border-orange-600/20">
-                <i class="fas fa-fire text-orange-600 text-3xl"></i>
-            </div>
-            <h2 class="font-title text-2xl mb-4 italic tracking-tighter text-white">O FOGO JÁ <br><span class="text-orange-600">ESTÁ ACESO!</span></h2>
-            <p class="text-zinc-400 text-sm leading-relaxed mb-10">
-                Sinta o aroma da brasa e a suculência do verdadeiro burger artesanal.
-                <span class="text-zinc-200 block mt-2 font-bold italic">A melhor mordida da sua vida começa agora.</span>
-            </p>
-            <button onclick="closeWelcome()" class="cta-button">🔥 QUERO MATAR MINHA FOME AGORA</button>
-        </div>
-    </div>
-
-    <div class="bg-orange-600 text-white text-[10px] font-black uppercase tracking-[0.2em] py-2 text-center sticky top-0 z-[110]">
-        🍔 PEÇA JÁ O SEU ARTESANAL FAVORITO!
-    </div>
-
-    <section class="hero-banner">
-        <img src="maonabrasa-banner.jpg" alt="Mao na Brasa - burgers artesanais feitos na brasa" onerror="this.onerror=null; this.parentElement.classList.add('logo-fallback'); this.src='maonabrasa.jpg';">
-    </section>
-
-    <header class="sticky top-[30px] z-[100] bg-black/80 backdrop-blur-2xl border-b border-white/10 p-4">
-        <div class="max-w-3xl mx-auto text-center">
-            <h1 class="font-title text-xl tracking-tighter uppercase mb-2">Mão na <span class="text-orange-600">Brasa</span></h1>
-            <div id="status-tag" class="inline-block px-4 py-1 rounded-full text-[9px] font-black uppercase italic mb-4">Verificando...</div>
-            <nav id="category-nav" class="flex gap-2 overflow-x-auto no-scrollbar">
-                <a href="#section-combos" class="nav-btn active" onclick="setActive(this)">🔥 Combos</a>
-                <a href="#section-burgers" class="nav-btn" onclick="setActive(this)">🍔 Burgers</a>
-                <a href="#section-porcoes" class="nav-btn" onclick="setActive(this)">🍟 Porções</a>
-                <a href="#section-sobremesas" class="nav-btn" onclick="setActive(this)">🍩 Doces</a>
-                <a href="#section-bebidas" class="nav-btn" onclick="setActive(this)">🥤 Bebidas</a>
-                <a href="admin.html" class="nav-btn">Admin</a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="max-w-3xl mx-auto p-4 pb-40">
-        <div id="menu-container"></div>
-    </main>
-
-    <div id="tutorial-modal" class="fixed inset-0 bg-black/95 z-[180] hidden items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#0a0a0a] border border-orange-600/30 w-full max-w-sm rounded-[32px] p-7 shadow-2xl">
-            <div class="text-center mb-6">
-                <div class="mb-4 inline-flex w-14 h-14 rounded-2xl bg-orange-600/15 border border-orange-600/30 items-center justify-center">
-                    <i class="fas fa-burger text-orange-500 text-2xl"></i>
-                </div>
-                <h3 class="font-title text-lg uppercase italic tracking-tighter">Como pedir</h3>
-                <p class="text-zinc-400 text-xs mt-2">Um guia rapido para montar seu pedido sem erro.</p>
-            </div>
-            <div class="space-y-4">
-                <div class="tutorial-step">
-                    <span class="tutorial-step-icon"><i class="fas fa-list"></i></span>
-                    <div>
-                        <p class="font-black uppercase text-xs">Escolha a categoria</p>
-                        <p class="text-zinc-400 text-[11px] leading-relaxed">Use as abas do topo para navegar pelo cardapio.</p>
-                    </div>
-                </div>
-                <div class="tutorial-step">
-                    <span class="tutorial-step-icon"><i class="fas fa-circle-plus"></i></span>
-                    <div>
-                        <p class="font-black uppercase text-xs">Toque no item</p>
-                        <p class="text-zinc-400 text-[11px] leading-relaxed">Adicione extras e observacoes quando aparecer a janela do produto.</p>
-                    </div>
-                </div>
-                <div class="tutorial-step">
-                    <span class="tutorial-step-icon"><i class="fas fa-cart-shopping"></i></span>
-                    <div>
-                        <p class="font-black uppercase text-xs">Confira o carrinho</p>
-                        <p class="text-zinc-400 text-[11px] leading-relaxed">Revise os itens, escolha entrega ou retirada e informe seus dados.</p>
-                    </div>
-                </div>
-                <div class="tutorial-step">
-                    <span class="tutorial-step-icon"><i class="fab fa-whatsapp"></i></span>
-                    <div>
-                        <p class="font-black uppercase text-xs">Finalize no WhatsApp</p>
-                        <p class="text-zinc-400 text-[11px] leading-relaxed">O pedido vai pronto para a conversa com a hamburgueria.</p>
-                    </div>
-                </div>
-            </div>
-            <button onclick="finishTutorial()" class="cta-button mt-7">Entendi, bora pedir</button>
-            <button onclick="finishTutorial()" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Pular tutorial</button>
-        </div>
-    </div>
-
-    <div id="modal-item" class="fixed inset-0 bg-black/95 z-[200] hidden items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[40px] p-8">
-            <h3 id="modal-name" class="font-bold text-orange-500 uppercase text-center mb-6 tracking-widest text-lg italic"></h3>
-            <div id="modal-addons-list" class="space-y-3 mb-6 max-h-60 overflow-y-auto no-scrollbar"></div>
-            <div id="obs-container">
-                <p class="text-[10px] font-bold text-zinc-500 uppercase mb-2 ml-1">Alguma Observação?</p>
-                <textarea id="modal-obs" placeholder="Ex: Ponto da carne, sem cebola..." class="bg-white/5 border border-white/10 rounded-2xl p-4 text-white w-full h-20 outline-none"></textarea>
-            </div>
-            <button onclick="addToCart()" class="cta-button mt-6">Adicionar ao Pedido</button>
-            <button onclick="closeModal('modal-item')" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Voltar</button>
-        </div>
-    </div>
-
-    <div id="modal-checkout" class="fixed inset-0 bg-black/98 z-[300] hidden items-center justify-center p-4 backdrop-blur-xl">
-        <div class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[40px] p-8 shadow-2xl overflow-y-auto max-h-[90vh] no-scrollbar">
-            <h3 class="font-bold text-orange-500 uppercase text-center mb-4 tracking-widest text-lg italic">Seu Pedido</h3>
-            <div id="resumo-pedido" class="bg-white/5 border border-white/10 rounded-2xl p-5 text-[11px] mb-6 space-y-3"></div>
-            <div class="space-y-4">
-                <input type="text" id="client-name" placeholder="Seu Nome" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none">
-                <select id="order-type" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none" onchange="toggleAddress(); updateResumo();">
-                    <option value="entrega">Entregar em casa 🚚</option>
-                    <option value="retirada">Retirar no local 📍</option>
-                </select>
-                <div id="address-fields"><input type="text" id="client-address" placeholder="Endereço Completo" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none"></div>
-                <select id="payment-method" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none">
-                    <option value="Pix">Pix</option>
-                    <option value="Cartão">Cartão</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                </select>
-            </div>
-            <button onclick="sendToWhatsApp()" class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8">FINALIZAR NO WHATSAPP</button>
-            <button onclick="closeModal('modal-checkout')" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Continuar Comprando</button>
-        </div>
-    </div>
-
-    <div id="cart-bar" class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-orange-600 p-5 rounded-[30px] hidden z-[150] shadow-2xl flex items-center justify-between cursor-pointer" onclick="openCheckout()">
-        <div class="flex items-center gap-4">
-            <span id="cart-qty" class="bg-black/20 w-10 h-10 flex items-center justify-center rounded-full font-black text-sm">0</span>
-            <span class="font-black uppercase text-[11px] tracking-widest italic">Ver Carrinho</span>
-        </div>
-        <span id="cart-total" class="font-black text-xl italic tracking-tighter">R$ 0,00</span>
-    </div>
-
-    <a href="admin.html" class="fixed bottom-4 right-4 z-[160] bg-black/80 border border-orange-600/60 text-orange-500 w-11 h-11 rounded-full flex items-center justify-center shadow-2xl" title="Admin">
-        <i class="fas fa-user-lock text-sm"></i>
+  <header class="topbar" id="topo">
+    <a href="#topo" class="brand" aria-label="Mao na Brasa - inicio">
+      <img id="brandLogo" src="mao-na-brasa-icon-512.png" alt="Logo Mao na Brasa" />
+      <span id="brandLabel">Mao na <strong>Brasa</strong></span>
     </a>
 
-    <script>
-        const WHATSAPP_NUMBER = "556492360895";
-        const DELIVERY_FEE = 8.00;
-        const SUPABASE_URL = "https://oxwchuduvegkgubautit.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_StBXgUqUyPh-wiItDIR5hg_7fol45Yl";
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        let cart = [];
-        let currentItem = null;
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
 
-        const burgerExtras = [
-            { name: "Carne Extra", price: 7.90 },
-            { name: "Bacon Extra", price: 5.90 },
-            { name: "Queijo Extra", price: 3.90 },
-            { name: "Salada Extra", price: 0.90 },
-            { name: "Cebola Extra", price: 0.90 },
-            { name: "Molho Extra", price: 0.90 },
-            { name: "Queijo Empanado", price: 8.90 },
-            { name: "Frango Empanado", price: 9.90 },
-            { name: "Queijo Cheddar", price: 5.90 },
-            { name: "Molho Cheddar", price: 7.90 }
-        ];
+    <nav class="nav" id="navMenu">
+      <a href="#topo">Home</a>
+      <a href="#cardapio">Cardapio</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
 
-        let menuLabels = {};
-        let menu = {
-            combos: [
-                { name: "Barca", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca1 (1).jpg", hasAddons: true, tag: "vendido" },
-                { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "chef" },
-                { name: "Brasa Duplo", price: 91.90, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 Coca-Cola 350ml", img: "barca.jpg", hasAddons: true, tag: "vendido" }
-            ],
-            burgers: [
-                { name: "Na Brasa", price: 45.90, desc: "blend bovinos 160 gramas, bacon, queijo mussarela, abacaxi selado no mel, queijo coalho, bacon, alface, tomate e cebola roxa.", img: "brasa.jpg", hasAddons: true, tag: "chef" },
-                { name: "Salada Duplo", price: 42.90, desc: "Dois blends, dobro de queijo, 3 bacon e ovo.", img: "prime.jpg", hasAddons: true, tag: "chef" },
-                { name: "Cheese Burger Duplo", price: 38.90, desc: "Dois blends e dose tripla de cheddar e bacon.", img: "Cheese Burger Duplo.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Frango Crispy", price: 39.90, desc: "Frando empanado, queijo mussarela empanado, bacon e catupiry.", img: "crispy.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Costela Prime", price: 44.90, desc: "Blend, costela desfiada e cream cheese maçaricado.", img: "costela.jpg", hasAddons: true, tag: "" },
-                { name: "Piscina de Cheddar", price: 37.99, desc: "Burger com bacon dentro de piscina de cheddar.", img: "piscina.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Bacon Burguer Duplo", price: 42.90, desc: "Dois blends, duas camadas de bacon e molho.", img: "duplo (1).jpg", hasAddons: true, tag: "" },
-                { name: "Bacon Burguer", price: 33.90, desc: "Blend, bacon crocante e queijo prato.", img: "bacon.jpg", hasAddons: true, tag: "" },
-                { name: "Bacon Burguer Triplo", price: 49.90, desc: "Três blends, três bacon e cebola caramelizada.", img: "triplobacon.jpg", hasAddons: true, tag: "" },
-                { name: "Cheese Burger", price: 29.90, desc: "Blend suculento, cheddar duplo e bacon.", img: "chesse (1).jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer Salada", price: 29.90, desc: "Blend, queijo prato, salada e maionese.", img: "salada.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer Bacon Caramelizado", price: 34.90, desc: "Blend 160g, bacon, queijo e salada.", img: "bacon caramelizado.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer Salada Especial", price: 34.90, desc: "Blend 160g, bacon, queijo e salada.", img: "saladaespecial.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer x Tudo", price: 34.99, desc: "Blend 160g, bacon, queijo, ovo, salsicha, alface, tomate, cebola e abacaxi.", img: "xtudo.jpg", hasAddons: true, tag: "" }
-            ],
-            porcoes: [
-                { name: "Batata Frita Especial 250g", price: 19.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata250.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Frita Especial 500g", price: 34.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata500.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Anéis de Cebola", price: 19.90, desc: "Crocantes.", img: "onion (1).jpg", hasAddons: false, tag: "" },
-                                { name: "Batata Especial de Strogonoff", price: 27.90, desc: "Batata, strogonoff e catupiry.", img: "bstrogonoff.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Costela", price: 27.90, desc: "Batata, costela e catupiry.", img: "bcostela.jpg", hasAddons: false, tag: "chef" },
-                { name: "Batata Especial de Calabresa", price: 27.90, desc: "Batata, calabresa, bacon, mussarela.", img: "bmussarela.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Carne", price: 27.90, desc: "Batata, strogonoff de carne e catupiry.", img: "bcarne.jpg", hasAddons: false, tag: "" }
-            ],
-            sobremesas: [
-                { name: "Brigadeiro Sortido", price: 16.00, desc: "Caixa com 4.", img: "brigadeiro.jpg", hasAddons: false, tag: "" },
-                { name: "Brownie com Sorvete", price: 22.00, desc: "Sorvete e Ganache.", img: "Brawnie com Sorvete.jpg", hasAddons: false, tag: "chef" },
-                { name: "Pizza de Brownie", price: 27.00, desc: "Ninho e Nutella.", img: "Browniepizza.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado.", img: "pudim (1).jpg", hasAddons: false, tag: "" }
-            ],
-            bebidas: [
-                { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg", hasAddons: false },
-                { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg", hasAddons: false },
-                { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg", hasAddons: false },
-                { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg", hasAddons: false },
-                { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg", hasAddons: false },
-                { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg", hasAddons: false },
-                { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg", hasAddons: false },
-                { name: "Suco Detox", price: 12.00, desc: "Couve, Gengibre, Abacaxi, Cenoura e Hortelã 400ml Natural", img: "detox.jpg", hasAddons: false },
-                { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg", hasAddons: false },
-                { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg", hasAddons: false },
-                { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg", hasAddons: false }
-            ]
-        };
+  <main>
+    <section class="hero">
+      <div class="hero-copy reveal">
+        <p class="eyebrow" id="heroEyebrow">Burger artesanal • brasa • sabor</p>
+        <h1 id="heroTitle">Churrasco.<br><span>Sabor.</span><br>Atitude.</h1>
+        <p class="hero-text" id="heroText">Burgers artesanais feitos na brasa, porcoes caprichadas, bebidas geladas e combos para matar a fome de verdade.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#cardapio">Ver cardapio</a>
+          <a class="btn btn-ghost" id="heroWhatsapp" target="_blank" rel="noopener">Fazer pedido</a>
+        </div>
+        <div class="trust-list">
+          <div><strong>🔥</strong><span>Feito na brasa</span></div>
+          <div><strong>🍔</strong><span>Artesanal</span></div>
+          <div><strong>⭐</strong><span>Qualidade premium</span></div>
+        </div>
+      </div>
 
-        function closeWelcome() {
-            document.getElementById('welcome-overlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            showTutorialOnce();
-        }
+      <div class="hero-card reveal delay-1">
+        <img id="heroLogo" src="mao-na-brasa-icon-512.png" alt="Icone oficial Mao na Brasa" />
+        <div class="hero-card-glow"></div>
+      </div>
+    </section>
 
-        function showTutorialOnce() {
-            if (localStorage.getItem('mnb_tutorial_seen') === 'yes') return;
-            document.getElementById('tutorial-modal').style.display = 'flex';
-        }
+    <section class="section banner-section reveal" aria-label="Identidade Mao na Brasa">
+      <img id="bannerImage" src="maonabrasa-banner.png" alt="Capa Mao na Brasa com burger, fogo e identidade visual" />
+    </section>
 
-        function finishTutorial() {
-            localStorage.setItem('mnb_tutorial_seen', 'yes');
-            document.getElementById('tutorial-modal').style.display = 'none';
-        }
+    <section class="section highlights reveal">
+      <article>
+        <span>01</span>
+        <h3 id="highlight1Title">Brasa de verdade</h3>
+        <p id="highlight1Text">Visual forte, sabor marcante e uma experiencia feita para quem gosta de lanche com presenca.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3 id="highlight2Title">Pedido rapido</h3>
+        <p id="highlight2Text">Escolha os itens, confira o total e envie tudo pronto direto para o WhatsApp.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3 id="highlight3Title">Cardapio editavel</h3>
+        <p id="highlight3Text">Produtos, categorias, fotos e disponibilidade continuam sendo atualizados pelo painel admin.</p>
+      </article>
+    </section>
 
-        function render() {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = "";
-            renderCategoryNav();
-            Object.keys(menu).forEach(cat => {
-                let html = `<section id="section-${cat}" class="mb-10">
-                            <h2 class="text-orange-500 font-title text-[10px] mb-6 tracking-[0.4em] uppercase flex items-center gap-3">
-                                <span class="w-10 h-[1px] bg-orange-600"></span> ${menuLabels[cat] || cat}
-                            </h2>
-                            <div class="grid gap-5">`;
-                menu[cat].forEach(p => {
-                    const itemName = String(p.name).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-                    let tagHtml = p.tag === 'vendido' ? `<span class="tag-badge bg-orange-600 text-white">🔥 Famoso</span>`
-                        : p.tag === 'chef' ? `<span class="tag-badge bg-yellow-500 text-black">🌟 Chef</span>` : "";
-                    html += `<div class="glass-card flex p-3 gap-4" onclick="openModal('${itemName}', ${p.price}, ${p.hasAddons})">
-                                ${tagHtml}
-                                <div class="img-box" style="background-image: url('${p.img}')"></div>
-                                <div class="flex flex-col justify-center flex-grow">
-                                    <h3 class="font-bold text-sm uppercase italic mb-1">${p.name}</h3>
-                                    <p class="text-[11px] text-zinc-400 leading-snug mb-2 line-clamp-2 italic">${p.desc}</p>
-                                    <span class="text-orange-500 font-black italic">R$ ${p.price.toFixed(2)}</span>
-                                </div>
-                            </div>`;
-                });
-                container.innerHTML += html + `</div></section>`;
-            });
-        }
+    <section class="section menu-section" id="cardapio">
+      <div class="section-head reveal">
+        <p class="eyebrow">Escolha o seu</p>
+        <h2>Cardapio na brasa</h2>
+        <p>Selecione uma categoria, adicione ao pedido e finalize pelo WhatsApp.</p>
+      </div>
 
-        function renderCategoryNav() {
-            const nav = document.getElementById('category-nav');
-            const icons = {
-                combos: 'ðŸ”¥',
-                burgers: 'ðŸ”',
-                porcoes: 'ðŸŸ',
-                sobremesas: 'ðŸ©',
-                bebidas: 'ðŸ¥¤'
-            };
-            const links = Object.keys(menu).map((cat, index) => {
-                const active = index === 0 ? ' active' : '';
-                return `<a href="#section-${cat}" class="nav-btn${active}" onclick="setActive(this)">${icons[cat] || '+'} ${menuLabels[cat] || cat}</a>`;
-            }).join('');
-            nav.innerHTML = links + `<a href="admin.html" class="nav-btn">Admin</a>`;
-        }
+      <div class="toolbar reveal">
+        <div class="category-tabs" id="categoryTabs"></div>
+        <label class="search-box">
+          <span>Buscar</span>
+          <input id="searchInput" type="search" placeholder="Ex: burger, combo, batata..." />
+        </label>
+      </div>
 
-        function categoryKey(category) {
-            const normalized = String(category || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            if (normalized.includes('combo')) return 'combos';
-            if (normalized.includes('burger') || normalized.includes('hamb')) return 'burgers';
-            if (normalized.includes('porc') || normalized.includes('batata')) return 'porcoes';
-            if (normalized.includes('sobrem') || normalized.includes('doce')) return 'sobremesas';
-            if (normalized.includes('bebida') || normalized.includes('suco') || normalized.includes('agua')) return 'bebidas';
-            return normalized.replace(/[^a-z0-9]+/g, '-') || 'outros';
-        }
+      <div class="menu-grid" id="menuGrid"></div>
+    </section>
 
-        async function loadMenuFromSupabase() {
-            const { data, error } = await supabaseClient
-                .from('mnb_products')
-                .select('*')
-                .eq('available', true)
-                .order('sort_order', { ascending: true });
+    <section class="section about" id="sobre">
+      <div class="about-card reveal">
+        <p class="eyebrow" id="aboutEyebrow">Sobre nos</p>
+        <h2 id="aboutTitle">Nao e so lanche. E experiencia.</h2>
+        <p id="aboutText">O Mao na Brasa nasceu para entregar burgers com presenca: pao macio, carne bem preparada, queijo derretendo e aquele aroma de brasa que abre o apetite antes da primeira mordida.</p>
+        <ul>
+          <li id="aboutLine1">Atendimento de segunda a sabado</li>
+          <li id="aboutLine2">Combos, burgers, porcoes, sobremesas e bebidas</li>
+          <li id="aboutLine3">Pedido enviado direto para o WhatsApp</li>
+        </ul>
+      </div>
+      <div class="about-stamp reveal delay-1">
+        <img id="aboutLogo" src="mao-na-brasa-icon-512.png" alt="Icone Mao na Brasa" />
+      </div>
+    </section>
 
-            if (error) {
-                console.warn('Nao foi possivel carregar o cardapio do Supabase:', error.message);
-                render();
-                return;
-            }
+    <section class="section contact" id="contato">
+      <div class="contact-card reveal">
+        <p class="eyebrow" id="contactEyebrow">Peca agora</p>
+        <h2 id="contactTitle">Bateu a fome?</h2>
+        <p id="contactText">Monte seu pedido no site e envie direto no WhatsApp do Mao na Brasa.</p>
+        <div class="contact-actions">
+          <a class="btn btn-primary" id="contactWhatsapp" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          <button class="btn btn-ghost" id="installBtn" type="button" hidden>Instalar app</button>
+        </div>
+      </div>
+    </section>
+  </main>
 
-            const grouped = {};
-            menuLabels = {};
-            data.forEach(product => {
-                const key = categoryKey(product.category);
-                if (!grouped[key]) grouped[key] = [];
-                menuLabels[key] = product.category || key;
-                grouped[key].push({
-                    name: product.name,
-                    price: Number(product.price || 0),
-                    desc: product.description || '',
-                    img: product.image || '',
-                    hasAddons: Boolean(product.has_addons),
-                    tag: product.tag || ''
-                });
-            });
+  <aside class="cart" id="cartPanel" aria-label="Carrinho de pedidos">
+    <button class="cart-close" id="closeCart" aria-label="Fechar carrinho">×</button>
+    <h2>Meu pedido</h2>
+    <p class="cart-helper">Confira os itens antes de enviar para o WhatsApp.</p>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartSubtotal">R$ 0,00</strong>
+    </div>
+    <div class="cart-total cart-fee-row">
+      <span>Entrega</span>
+      <strong id="cartDeliveryFee">R$ 0,00</strong>
+    </div>
+    <label class="checkout-field">
+      <span>Nome</span>
+      <input id="customerName" type="text" placeholder="Seu nome" />
+    </label>
+    <label class="checkout-field">
+      <span>Entrega ou retirada</span>
+      <select id="orderType">
+        <option value="entrega">Entrega</option>
+        <option value="retirada">Retirada</option>
+      </select>
+    </label>
+    <label class="checkout-field" id="addressField">
+      <span>Endereco</span>
+      <input id="customerAddress" type="text" placeholder="Rua, numero, bairro" />
+    </label>
+    <label class="checkout-field">
+      <span>Pagamento</span>
+      <select id="paymentMethod">
+        <option value="Pix">Pix</option>
+        <option value="Cartao">Cartao</option>
+        <option value="Dinheiro">Dinheiro</option>
+      </select>
+    </label>
+    <textarea id="customerNote" placeholder="Observacao do pedido. Ex: sem cebola, ponto da carne..."></textarea>
+    <div class="cart-total total-final">
+      <span>Total</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+    <a class="btn btn-primary full" id="checkoutBtn" target="_blank" rel="noopener">Enviar pedido</a>
+  </aside>
 
-            if (Object.keys(grouped).length) menu = grouped;
-            render();
-        }
+  <dialog class="addon-modal" id="addonModal">
+    <div class="addon-box">
+      <button class="cart-close" id="closeAddonModal" aria-label="Fechar adicionais">×</button>
+      <p class="eyebrow">Monte do seu jeito</p>
+      <h2 id="addonProductName">Adicionais</h2>
+      <div id="addonList" class="addon-list"></div>
+      <textarea id="itemNote" placeholder="Observacao deste item. Ex: sem cebola, ponto da carne..."></textarea>
+      <button class="btn btn-primary full" id="confirmAddonBtn" type="button">Adicionar ao carrinho</button>
+    </div>
+  </dialog>
 
-        function openModal(name, price, hasAddons) {
-            currentItem = { name, price, addons: [], obs: "" };
-            document.getElementById('modal-name').innerText = name;
-            document.getElementById('modal-obs').value = "";
-            const list = document.getElementById('modal-addons-list');
-            list.innerHTML = hasAddons ? `<p class="text-[9px] font-black text-orange-500 uppercase mb-4 tracking-widest">Turbine seu pedido:</p>` + burgerExtras.map(a => `
-                <label class="flex justify-between items-center bg-white/5 p-4 rounded-2xl mb-2 cursor-pointer border border-white/5">
-                    <span class="text-[11px] uppercase font-bold">${a.name} (+R$${a.price.toFixed(2)})</span>
-                    <input type="checkbox" class="w-6 h-6 accent-orange-600 rounded-lg" onchange="updateAddon('${a.name}', ${a.price}, this.checked)">
-                </label>`).join('') : "";
-            document.getElementById('obs-container').style.display = hasAddons ? 'block' : 'none';
-            document.getElementById('modal-item').style.display = 'flex';
-        }
+  <button class="floating-cart" id="openCart" aria-label="Abrir carrinho">
+    🛒 <span id="cartCount">0</span>
+  </button>
 
-        function updateAddon(name, price, checked) {
-            if (checked) currentItem.addons.push({ name, price });
-            else currentItem.addons = currentItem.addons.filter(a => a.name !== name);
-        }
+  <button class="tutorial-open" id="tutorialOpen" title="Como pedir" aria-label="Abrir tutorial">?</button>
 
-        function addToCart() {
-            currentItem.obs = document.getElementById('modal-obs').value;
-            cart.push({ ...currentItem });
-            closeModal('modal-item');
-            updateCartBar();
-        }
+  <dialog class="tutorial-modal" id="tutorialModal">
+    <div class="tutorial-box">
+      <button class="cart-close" id="closeTutorial" aria-label="Fechar tutorial">×</button>
+      <p class="eyebrow">Primeira vez por aqui?</p>
+      <h2>Como pedir</h2>
+      <div class="tutorial-list">
+        <div><strong>1</strong><span>Escolha uma categoria e toque em adicionar.</span></div>
+        <div><strong>2</strong><span>Abra o carrinho, revise os itens e informe seus dados.</span></div>
+        <div><strong>3</strong><span>Finalize no WhatsApp com a mensagem pronta.</span></div>
+      </div>
+      <button class="btn btn-primary full" id="finishTutorial" type="button">Entendi, bora pedir</button>
+    </div>
+  </dialog>
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            if (cart.length === 0) closeModal('modal-checkout');
-            updateCartBar();
-            updateResumo();
-        }
+  <footer>
+    <strong id="footerBrand">Mao na Brasa</strong>
+    <span>© <span id="year"></span> Todos os direitos reservados.</span>
+  </footer>
 
-        function updateCartBar() {
-            let total = 0;
-            cart.forEach(i => {
-                total += i.price;
-                i.addons.forEach(a => total += a.price);
-            });
-            document.getElementById('cart-qty').innerText = cart.length;
-            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
-            document.getElementById('cart-bar').style.display = cart.length > 0 ? 'flex' : 'none';
-        }
-
-        function updateResumo() {
-            const resumo = document.getElementById('resumo-pedido');
-            let html = "";
-            let sub = 0;
-            const isEntrega = document.getElementById('order-type').value === 'entrega';
-
-            cart.forEach((item, index) => {
-                let v = item.price;
-                item.addons.forEach(a => v += a.price);
-                sub += v;
-                html += `
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex flex-col">
-                            <span class="font-bold text-white">${item.name}</span>
-                            ${item.addons.map(a => `<span class="text-[9px] text-zinc-500">+ ${a.name}</span>`).join('')}
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-white">R$ ${v.toFixed(2)}</span>
-                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400 p-1">
-                                <i class="fas fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>`;
-            });
-
-            if (isEntrega) {
-                html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-zinc-400"><span>Taxa de Entrega:</span><span>R$ ${DELIVERY_FEE.toFixed(2)}</span></div>`;
-                sub += DELIVERY_FEE;
-            } else {
-                html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-orange-400"><span>Retirada:</span><span>Grátis</span></div>`;
-            }
-            html += `<div class="flex justify-between text-orange-500 font-black text-sm uppercase mt-2"><span>Total:</span><span>R$ ${sub.toFixed(2)}</span></div>`;
-            resumo.innerHTML = html;
-        }
-
-        function openCheckout() {
-            updateResumo();
-            document.getElementById('modal-checkout').style.display = 'flex';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function toggleAddress() {
-            document.getElementById('address-fields').style.display = document.getElementById('order-type').value === 'entrega' ? 'block' : 'none';
-        }
-
-        function setActive(el) {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        async function sendToWhatsApp() {
-            const name = document.getElementById('client-name').value;
-            if (!name) return alert("Diga seu nome!");
-            const type = document.getElementById('order-type').value;
-            const payment = document.getElementById('payment-method').value;
-            let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n*Tipo:* ${type.toUpperCase()}\n\n`;
-            let total = 0;
-            cart.forEach(i => {
-                let it = i.price;
-                msg += `⭐ *${i.name}*\n`;
-                i.addons.forEach(a => {
-                    it += a.price;
-                    msg += `  + ${a.name}\n`;
-                });
-                if (i.obs) msg += `  _Obs: ${i.obs}_\n`;
-                msg += `  Sub: R$ ${it.toFixed(2)}\n\n`;
-                total += it;
-            });
-            if (type === 'entrega') {
-                const addr = document.getElementById('client-address').value;
-                if (!addr) return alert("Diga o endereço!");
-                msg += `*Endereço:* ${addr}\n*Entrega:* R$ ${DELIVERY_FEE.toFixed(2)}\n`;
-                total += DELIVERY_FEE;
-            }
-            msg += `*PAGAMENTO:* ${payment}\n`;
-            msg += `*TOTAL: R$ ${total.toFixed(2)}*`;
-            await saveOrderToSupabase({ name, type, payment, total });
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
-        }
-
-        async function saveOrderToSupabase({ name, type, payment, total }) {
-            const isEntrega = type === 'entrega';
-            const subtotal = cart.reduce((sum, item) => {
-                return sum + item.price + item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
-            }, 0);
-            const protocol = `MNB-${Date.now().toString().slice(-6)}`;
-            const customer = {
-                name,
-                type,
-                payment,
-                address: isEntrega ? document.getElementById('client-address').value : ''
-            };
-            const items = cart.map(item => ({
-                name: item.name,
-                price: item.price,
-                addons: item.addons,
-                obs: item.obs || ''
-            }));
-
-            const { error } = await supabaseClient.from('mnb_orders').insert({
-                protocol,
-                customer,
-                items,
-                subtotal,
-                delivery_fee: isEntrega ? DELIVERY_FEE : 0,
-                total
-            });
-
-            if (error) console.warn('Pedido nao foi salvo no Supabase:', error.message);
-        }
-
-        const tagStatus = document.getElementById('status-tag');
-        const now = new Date();
-        const hour = now.getHours();
-        const day = now.getDay();
-
-        if (day === 1) {
-            tagStatus.innerText = "● FECHADO (SEGUNDA)";
-            tagStatus.classList.add("bg-red-500/20", "text-red-500");
-        } else if (hour >= 19 || hour < 1) {
-            tagStatus.innerText = "● ABERTO AGORA";
-            tagStatus.classList.add("bg-green-500/20", "text-green-500");
-        } else {
-            tagStatus.innerText = "● FECHADO";
-            tagStatus.classList.add("bg-red-500/20", "text-red-500");
-        }
-        loadMenuFromSupabase();
-    </script>
+  <script src="script.js"></script>
 </body>
-</html>
 
+</html>
